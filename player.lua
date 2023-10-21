@@ -1,10 +1,12 @@
 
 function Player(x, y, world)
   local player = {}
-  player.width = 32
-  player.height = 32
-  player.scaleX = player.width / assets.tileSize
-  player.scaleY = player.height / assets.tileSize
+  player.debug = false
+
+  player.width = 16
+  player.height = 28
+  player.scaleX = (player.width / assets.tileSize) * 2
+  player.scaleY = 32 / assets.tileSize
 
   -- flipped
   player.flipped = true
@@ -48,22 +50,26 @@ function Player(x, y, world)
   end
 
   function player.draw(self)
-    -- Draw hitbox
-    love.graphics.polygon("line", self.body:getWorldPoints(self.shape:getPoints()))
-
     -- position
-    x = self.body:getX() - player.width * 0.5
-    y = self.body:getY() - player.height * 0.5
+    x = self.body:getX() - player.width
+    y = self.body:getY() - 32 * 0.5
 
     local scaleX = player.scaleX
     -- Decide orientation
     if player.flipped then
-      x = self.body:getX() + player.width * 0.5
+      x = self.body:getX() + player.width
       scaleX = -player.scaleX
     end
 
     -- Draw Player Sprite
     love.graphics.draw(assets.tileset, assets.player, x, y, 0, scaleX, player.scaleY)
+
+    -- Draw hitbox
+    if player.debug then
+      love.graphics.setColor(0, 0, 1)
+      love.graphics.polygon("line", self.body:getWorldPoints(self.shape:getPoints()))
+      love.graphics.setColor(1, 1, 1)
+    end
   end
 
   function player.limitJump(self)

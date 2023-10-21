@@ -35,8 +35,10 @@ function love.load()
   world:setCallbacks(beginContact, endContact)
 
   -- Adding platforms
+  -- Ground
   local p = platformClass(WIDTH / 2, HEIGHT - 60, WIDTH, 40, world)
   table.insert(platforms, p)
+
   p = platformClass(WIDTH/2, HEIGHT - 150, 100, 20, world)
   table.insert(platforms, p)
 end
@@ -60,16 +62,14 @@ end
 
 -- When two bodies end colliding
 function endContact(a, b, coll)
-  if a:getUserData() == "Player" and b:getUserData() == "Platform" then
-    -- in the air now
-    isGrounded = false
-  end
+  -- Nothing here yet
 end
 
 function love.keypressed(key)
   -- Jump if w or up
   if isGrounded and (key == 'w' or key == 'up') then
     player:jump()
+    isGrounded = false
   end
 end
 
