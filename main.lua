@@ -74,7 +74,7 @@ function love.keypressed(key)
 end
 
 function love.keyreleased(key)
-  if key == 'w' or key == 'up' then
+  if (key == 'w' or key == 'up') then
     player:limitJump()
   end
 end

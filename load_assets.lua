@@ -6,7 +6,14 @@ function Assets()
 
   assets.tileSize = 128
   assets.tileset = love.graphics.newImage("assets/spritesheet_retina.png")
-  assets.player = love.graphics.newQuad(assets.tileSize * 9, assets.tileSize * 1, assets.tileSize, assets.tileSize, assets.tileset:getWidth(), assets.tileset:getHeight())
+  
+  -- Rect Shape
+  --assets.player = love.graphics.newQuad(assets.tileSize * 9, assets.tileSize * 1, assets.tileSize, assets.tileSize, assets.tileset:getWidth(), assets.tileset:getHeight())
+  --assets.ghost = love.graphics.newQuad(assets.tileSize * 9, assets.tileSize * 2, assets.tileSize, assets.tileSize, assets.tileset:getWidth(), assets.tileset:getHeight())
+  
+  -- Capsule Shape
+  assets.player = love.graphics.newQuad(assets.tileSize * 9, assets.tileSize * 5, assets.tileSize, assets.tileSize, assets.tileset:getWidth(), assets.tileset:getHeight())
+  assets.ghost = love.graphics.newQuad(assets.tileSize * 9, assets.tileSize * 6, assets.tileSize, assets.tileSize, assets.tileset:getWidth(), assets.tileset:getHeight())
 
   -- Numbers
   assets.zero = love.graphics.newQuad(assets.tileSize * 1, assets.tileSize * 6, assets.tileSize, assets.tileSize, assets.tileset:getWidth(), assets.tileset:getHeight())
