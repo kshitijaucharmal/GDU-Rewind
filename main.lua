@@ -73,6 +73,12 @@ function love.keypressed(key)
   end
 end
 
+function love.keyreleased(key)
+  if key == 'w' or key == 'up' then
+    player:limitJump()
+  end
+end
+
 -- draw everything
 function love.draw()
   for _, platform in pairs(platforms) do

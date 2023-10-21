@@ -8,6 +8,7 @@ function Player(x, y, world)
 
   -- flipped
   player.flipped = true
+  player.stop_factor = 0.3
 
   -- Physics setup
   player.body = love.physics.newBody(world, x, y, "dynamic")
@@ -63,6 +64,12 @@ function Player(x, y, world)
 
     -- Draw Player Sprite
     love.graphics.draw(assets.tileset, assets.player, x, y, 0, scaleX, player.scaleY)
+  end
+
+  function player.limitJump(self)
+    x, y = self.body:getLinearVelocity()
+    y = y * self.stop_factor
+    self.body:setLinearVelocity(x, y)
   end
 
   return player
