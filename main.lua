@@ -22,7 +22,7 @@ love.physics.setMeter(128) -- the height of a meter
 -- create a world for the bodies to exist in with horizontal gravity of 0 and vertical gravity of 9.81 * 4
 local world = love.physics.newWorld(0, 4*9.81*128, true)
 
-local player = playerClass(WIDTH / 2, HEIGHT - 100, world)
+local player = playerClass(WIDTH / 2, HEIGHT - 300, world)
 local platforms = {}
 
 -- is player on ground ?
@@ -84,5 +84,9 @@ function love.draw()
   for _, platform in pairs(platforms) do
     platform:draw()
   end
+
+  love.graphics.draw(assets.tileset, assets.one, WIDTH / 2 - 36, 0, 0, 0.5, 0.5)
+  love.graphics.draw(assets.tileset, assets.zero, WIDTH / 2 - 36 + 28, 0, 0, 0.5, 0.5)
+
   player:draw()
 end
