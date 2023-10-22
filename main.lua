@@ -1,92 +1,30 @@
 
--- Importing classes
-local playerClass = require('player')
-local platformClass = require('platform')
-
--- Importing Assets
-print('Loading Assets.....')
-assets = require('load_assets')
-print('Done.')
-
--- Global Values
+-- Globals
 WIDTH = 800
 HEIGHT = 640
+cellSize = 800 / 20
 
--- Setup window
-function love.setup()
-  love.window.setMode(WIDTH, HEIGHT)
-end
+-- Colors
+require('colors')
+-- Assets
+assets = require('load_assets')
 
--- Setup
-love.physics.setMeter(128) -- the height of a meter
--- create a world for the bodies to exist in with horizontal gravity of 0 and vertical gravity of 9.81 * 4
-local world = love.physics.newWorld(0, 4*9.81*128, true)
+-- Load LevelLoader
+lvlgen = require('level_generator')
 
-local player = playerClass(WIDTH / 2, HEIGHT - 300, world)
-local platforms = {}
-
--- is player on ground ?
-local isGrounded = true
-
--- Load function
 function love.load()
-  love.graphics.setBackgroundColor(21/255, 21/255, 21/255)
-  -- Get Info about collisions
-  world:setCallbacks(beginContact, endContact)
+  love.window.setMode(WIDTH, HEIGHT)
+  love.graphics.setBackgroundColor(150/255, 200/255, 255/255)
+  love.physics.setMeter(cellSize)
+  world = love.physics.newWorld(0, 4 * 9.81 * cellSize, true)
 
-  -- Adding platforms
-  -- Ground
-  local p = platformClass(WIDTH / 2, HEIGHT - 60, WIDTH, 40, world)
-  table.insert(platforms, p)
-
-  p = platformClass(WIDTH/2, HEIGHT - 150, 100, 20, world)
-  table.insert(platforms, p)
+  lvlgen:LoadLevel()
 end
 
--- Update function
 function love.update(dt)
-  -- Update world physics
   world:update(dt)
-
-  -- move player with keyboard
-  player:move()
 end
 
--- When two bodies start colliding
-function beginContact(a, b, coll)
-  if a:getUserData() == "Player" and b:getUserData() == "Platform" then
-    -- Just landed on ground
-    isGrounded = true
-  end
-end
-
--- When two bodies end colliding
-function endContact(a, b, coll)
-  -- Nothing here yet
-end
-
-function love.keypressed(key)
-  -- Jump if w or up
-  if isGrounded and (key == 'w' or key == 'up') then
-    player:jump()
-    isGrounded = false
-  end
-end
-
-function love.keyreleased(key)
-  if (key == 'w' or key == 'up') then
-    player:limitJump()
-  end
-end
-
--- draw everything
 function love.draw()
-  for _, platform in pairs(platforms) do
-    platform:draw()
-  end
-
-  love.graphics.draw(assets.tileset, assets.one, WIDTH / 2 - 36, 0, 0, 0.5, 0.5)
-  love.graphics.draw(assets.tileset, assets.zero, WIDTH / 2 - 36 + 28, 0, 0, 0.5, 0.5)
-
-  player:draw()
+  lvlgen:draw()
 end
