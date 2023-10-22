@@ -1,4 +1,3 @@
-
 function Player(x, y, world)
   local player = {}
   player.width = 32
