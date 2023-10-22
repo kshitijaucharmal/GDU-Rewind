@@ -1,5 +1,6 @@
 function Mapper()
   local tileClass = require('tile')
+  local playerClass = require('player')
   local mapper = {}
 
   function mapper.mapColorToTile(color, x, y, level)
@@ -8,7 +9,8 @@ function Mapper()
     elseif compareColors(color, colors.black) then
       table.insert(level, tileClass(assets.ground, x, y, world, "static"))
     elseif compareColors(color, colors.red) then
-      table.insert(level, tileClass(assets.blank, x, y, world, "static"))
+      player = playerClass(x, y, world)
+      table.insert(level, player)
     elseif compareColors(color, colors.green) then
       table.insert(level, tileClass(assets.tree, x, y, world, "dynamic"))
     elseif compareColors(color, colors.blue) then

@@ -3,13 +3,19 @@ function Tile(tileImg, x, y, world, movement)
   local tile = {}
   tile.tileset = assets.tileset
   tile.image = tileImg
-  tile.body = love.physics.newBody(world, x, y, movement)
+  local bx = x + cellSize * 0.5
+  local by = y + cellSize * 0.5
+  tile.body = love.physics.newBody(world, bx, by, movement)
   tile.shape = love.physics.newRectangleShape(cellSize, cellSize)
   tile.fixture = love.physics.newFixture(tile.body, tile.shape)
 
   function tile.draw(self)
-    --love.graphics.rectangle("fill", self.body:getWorldPoints(self.shape:getPoints()))
-    love.graphics.draw(self.tileset, self.image, self.body:getX(), self.body:getY(), 0, 40/128, 40/128)
+    local dx = self.body:getX() - cellSize * 0.5
+    local dy = self.body:getY() - cellSize * 0.5
+    love.graphics.draw(self.tileset, self.image, dx, dy, 0, 40/128, 40/128)
+    love.graphics.setColor(0, 1, 0)
+    love.graphics.polygon("line", self.body:getWorldPoints(self.shape:getPoints()))
+    love.graphics.setColor(1, 1, 1)
   end
 
   return tile

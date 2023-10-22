@@ -9,6 +9,7 @@ function Assets()
   assets.levelImgData = love.image.newImageData("assets/map4.png")
   assets.level = love.graphics.newImage(assets.levelImgData)
 
+  assets.player = love.graphics.newQuad(assets.tileSize * 9, assets.tileSize * 5, assets.tileSize, assets.tileSize, assets.tileset:getWidth(), assets.tileset:getHeight())
   assets.blank = love.graphics.newQuad(assets.tileSize * 6, assets.tileSize * 8, assets.tileSize, assets.tileSize, assets.tileset:getWidth(), assets.tileset:getHeight())
   assets.ground = love.graphics.newQuad(assets.tileSize * 2, assets.tileSize * 5, assets.tileSize, assets.tileSize, assets.tileset:getWidth(), assets.tileset:getHeight())
   assets.tree = love.graphics.newQuad(assets.tileSize * 2, assets.tileSize * 4, assets.tileSize, assets.tileSize, assets.tileset:getWidth(), assets.tileset:getHeight())

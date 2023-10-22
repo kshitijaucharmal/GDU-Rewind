@@ -1,7 +1,7 @@
 
 function Player(x, y, world)
   local player = {}
-  player.debug = false
+  player.debug = true
 
   player.width = 16
   player.height = 28
