@@ -18,6 +18,9 @@ function love.setup()
 end
 
 -- Setup
+
+--here 128x128 is size of one pixel in texture pack
+
 love.physics.setMeter(128) -- the height of a meter
 -- create a world for the bodies to exist in with horizontal gravity of 0 and vertical gravity of 9.81 * 4
 local world = love.physics.newWorld(0, 4 * 9.81 * 128, true)
@@ -36,7 +39,9 @@ function love.load()
   world:setCallbacks(beginContact, endContact)
 
   -- Adding platforms
+  -- here p is the ground of game
   local p = platformClass(WIDTH / 2, HEIGHT - 60, WIDTH, 40, world)
+  -- here p is the ground of game
   table.insert(platforms, p)
   p = platformClass(WIDTH / 2, HEIGHT - 150, 100, 20, world)
   table.insert(platforms, p)
@@ -76,8 +81,10 @@ end
 
 -- draw everything
 function love.draw()
+  --to draw platforms
   for _, platform in pairs(platforms) do
     platform:draw()
   end
+  --to draw player
   player:draw()
 end

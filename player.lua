@@ -1,3 +1,6 @@
+-- this is player class
+
+-- this is constructor of player class
 function Player(x, y, world)
   local player = {}
   player.width = 32
@@ -6,6 +9,7 @@ function Player(x, y, world)
   player.scaleY = player.height / assets.tileSize
 
   -- flipped
+  -- player is facing left intilly
   player.flipped = true
 
   -- Physics setup
