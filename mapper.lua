@@ -1,23 +1,39 @@
+
+-- Categories
+-- 1 -> Default
+-- 2 -> Player
+-- 3 -> Ground
+-- 4 -> Obstacles
+-- 5 -> Props
+
 function Mapper()
   local tileClass = require('tile')
   local playerClass = require('player')
   local mapper = {}
 
   function mapper.mapColorToTile(color, x, y, level)
+    local tile = nil
     if compareColors(color, colors.white) then
-      table.insert(level, tileClass(assets.blank, x, y, world, "static"))
+      tile = tileClass(assets.blank, x, y, world, "static")
+      tile.fixture:setCategory(3)
     elseif compareColors(color, colors.black) then
-      table.insert(level, tileClass(assets.ground, x, y, world, "static"))
+      tile = tileClass(assets.ground, x, y, world, "static")
+      tile.fixture:setCategory(3)
     elseif compareColors(color, colors.red) then
       player = playerClass(x, y, world)
-      table.insert(level, player)
+      player.fixture:setCategory(1)
+      player.fixture:setMask(5)
+      tile = player
     elseif compareColors(color, colors.green) then
-      table.insert(level, tileClass(assets.tree, x, y, world, "dynamic"))
+      tile = tileClass(assets.tree, x, y, world, "dynamic")
+      tile.fixture:setCategory(5)
     elseif compareColors(color, colors.blue) then
-      table.insert(level, tileClass(assets.finish, x, y, world, "static"))
+      tile = tileClass(assets.finish, x, y, world, "static")
+      tile.fixture:setCategory(5)
     else
       print("Wrong Color")
     end
+    table.insert(level, tile)
   end
 
   return mapper

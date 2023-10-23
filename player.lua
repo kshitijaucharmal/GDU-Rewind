@@ -1,7 +1,7 @@
 
 function Player(x, y, world)
   local player = {}
-  player.debug = true
+  player.debug = false
 
   player.width = 16
   player.height = 28
@@ -14,7 +14,7 @@ function Player(x, y, world)
 
   -- Physics setup
   player.body = love.physics.newBody(world, x, y, "dynamic")
-  player.shape = love.physics.newRectangleShape(player.width, player.height)
+  player.shape = love.physics.newCircleShape(player.width)
   player.fixture = love.physics.newFixture(player.body, player.shape)
   player.fixture:setUserData("Player")
   player.fixture:setFriction(0)
@@ -67,7 +67,7 @@ function Player(x, y, world)
     -- Draw hitbox
     if player.debug then
       love.graphics.setColor(0, 0, 1)
-      love.graphics.polygon("line", self.body:getWorldPoints(self.shape:getPoints()))
+      love.graphics.circle("line", player.body:getX(), player.body:getY(), player.shape:getRadius())
       love.graphics.setColor(1, 1, 1)
     end
   end
