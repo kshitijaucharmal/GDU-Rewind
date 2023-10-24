@@ -12,13 +12,30 @@ cellSize = WIDTH / assets.levelImgData:getWidth()
 -- Load LevelLoader
 lvlgen = require('level_generator')
 
+local isGrounded = true
+
 function love.load()
   love.window.setMode(WIDTH, HEIGHT)
   --love.graphics.setBackgroundColor(150/255, 200/255, 255/255)
   love.physics.setMeter(128)
   world = love.physics.newWorld(0, 2 * 9.81 * 128, true)
+  -- Get Info about collisions
+  world:setCallbacks(beginContact, endContact)
 
   lvlgen:LoadLevel()
+end
+
+-- When two bodies start colliding
+function beginContact(a, b, coll)
+  if a:getUserData() == "Ground" and b:getUserData() == "Player" then
+    -- Just landed on ground
+    isGrounded = true
+  end
+end
+
+-- When two bodies end colliding
+function endContact(a, b, coll)
+  -- Nothing here yet
 end
 
 function love.update(dt)
@@ -28,8 +45,15 @@ function love.update(dt)
 end
 
 function love.keypressed(key)
-  if key == 'w' or key == 'up' then
+  if isGrounded and (key == 'w' or key == 'up') then
     player:jump()
+    isGrounded = false
+  end
+end
+
+function love.keyreleased(key)
+  if (key == 'w' or key == 'up') then
+    player:limitJump()
   end
 end
 

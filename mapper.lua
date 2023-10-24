@@ -15,9 +15,11 @@ function Mapper()
     local tile = nil
     if compareColors(color, colors.white) then
       tile = tileClass(assets.blank, x, y, world, "static")
+      tile.fixture:setUserData("Blank")
       tile.fixture:setCategory(3)
     elseif compareColors(color, colors.black) then
       tile = tileClass(assets.ground, x, y, world, "static")
+      tile.fixture:setUserData("Ground")
       tile.fixture:setCategory(3)
     elseif compareColors(color, colors.red) then
       player = playerClass(x, y, world)
