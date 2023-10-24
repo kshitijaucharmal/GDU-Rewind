@@ -1,4 +1,3 @@
-
 -- Importing classes
 local playerClass = require('player')
 local platformClass = require('platform')
@@ -20,7 +19,7 @@ end
 -- Setup
 love.physics.setMeter(128) -- the height of a meter
 -- create a world for the bodies to exist in with horizontal gravity of 0 and vertical gravity of 9.81 * 4
-local world = love.physics.newWorld(0, 4*9.81*128, true)
+local world = love.physics.newWorld(0, 4 * 9.81 * 128, true)
 
 local player = playerClass(WIDTH / 2, HEIGHT - 300, world)
 local platforms = {}
@@ -30,7 +29,7 @@ local isGrounded = true
 
 -- Load function
 function love.load()
-  love.graphics.setBackgroundColor(21/255, 21/255, 21/255)
+  love.graphics.setBackgroundColor(21 / 255, 21 / 255, 21 / 255)
   -- Get Info about collisions
   world:setCallbacks(beginContact, endContact)
 
@@ -39,7 +38,7 @@ function love.load()
   local p = platformClass(WIDTH / 2, HEIGHT - 60, WIDTH, 40, world)
   table.insert(platforms, p)
 
-  p = platformClass(WIDTH/2, HEIGHT - 150, 100, 20, world)
+  p = platformClass(WIDTH / 2, HEIGHT - 150, 100, 20, world)
   table.insert(platforms, p)
 end
 
