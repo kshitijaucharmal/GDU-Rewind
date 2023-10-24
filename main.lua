@@ -1,13 +1,13 @@
 
--- Globals
-WIDTH = 800
-HEIGHT = 640
-cellSize = 800 / 20
-
 -- Colors
 require('colors')
 -- Assets
 assets = require('load_assets')
+
+-- Globals
+WIDTH = 800
+HEIGHT = 640
+cellSize = WIDTH / assets.levelImgData:getWidth()
 
 -- Load LevelLoader
 lvlgen = require('level_generator')

@@ -13,7 +13,7 @@ function Tile(tileImg, x, y, world, movement)
   function tile.draw(self)
     local dx = self.body:getX() - cellSize * 0.5
     local dy = self.body:getY() - cellSize * 0.5
-    love.graphics.draw(self.tileset, self.image, dx, dy, 0, 40/128, 40/128)
+    love.graphics.draw(self.tileset, self.image, dx, dy, 0, cellSize/assets.tileSize, cellSize/assets.tileSize)
 
     if self.debug then
       love.graphics.setColor(0, 1, 0)
