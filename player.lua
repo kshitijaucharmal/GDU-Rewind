@@ -14,15 +14,15 @@ function Player(x, y, world)
 
   -- Physics setup
   player.body = love.physics.newBody(world, x, y, "dynamic")
-  player.shape = love.physics.newCircleShape(player.width)
+  player.shape = love.physics.newCircleShape(player.width - 4)
   player.fixture = love.physics.newFixture(player.body, player.shape)
   player.fixture:setUserData("Player")
   player.fixture:setFriction(0)
   player.body:setFixedRotation(true)
 
   -- chars
-  player.jumpForce = 1200
-  player.speed = 280
+  player.jumpForce = 800
+  player.speed = 200
 
   -- move with keyboard
   function player.move(self)

@@ -14,7 +14,7 @@ lvlgen = require('level_generator')
 
 function love.load()
   love.window.setMode(WIDTH, HEIGHT)
-  love.graphics.setBackgroundColor(150/255, 200/255, 255/255)
+  --love.graphics.setBackgroundColor(150/255, 200/255, 255/255)
   love.physics.setMeter(128)
   world = love.physics.newWorld(0, 2 * 9.81 * 128, true)
 
@@ -34,5 +34,6 @@ function love.keypressed(key)
 end
 
 function love.draw()
+  love.graphics.draw(assets.bg, 0, 0, 0, 1, 0.7)
   lvlgen:draw()
 end
