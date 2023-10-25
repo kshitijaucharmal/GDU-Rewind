@@ -1,4 +1,3 @@
-
 function Player(x, y, world)
   local player = {}
   player.debug = false
@@ -19,6 +18,8 @@ function Player(x, y, world)
   player.fixture:setUserData("Player")
   player.fixture:setFriction(0)
   player.body:setFixedRotation(true)
+
+
 
   -- chars
   player.jumpForce = 800

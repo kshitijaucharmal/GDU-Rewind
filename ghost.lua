@@ -1,12 +1,16 @@
 -- Import the Player module
-local Player = require("player")
+
 
 function Ghost(x, y, world, player)
     local ghost = {}
 
+    -- all players position
+    ghost.all_pos = {}
+    ghost.posCounter = 0
+
     -- Properties
-    ghost.width = 16
-    ghost.height = 28
+    ghost.width = player.width
+    ghost.height = player.height
     ghost.scaleX = -1 -- Mirrored horizontally
     ghost.scaleY = 32 / assets.tileSize
 
@@ -19,29 +23,20 @@ function Ghost(x, y, world, player)
     ghost.body:setFixedRotation(true)
 
     -- Speed for automatic movement
-    ghost.speed = 280
 
-    -- Automatically move towards player
-    function ghost.autoMove(self, playerX)
-        local x, y = self.body:getLinearVelocity()
-        
-        x = 0
-        y = 0
-        -- Calculate direction to player
-        local direction = playerX > self.body:getX() and 1 or -1
 
-        -- Set velocity to move towards the player
-        x = direction * self.speed
+    --to store pos of player every frame
+    function ghost.storePos(self)
+        local playerPos = { player.body:getX(), player.body:getY() }
+        table.insert(self.all_pos, playerPos)
 
-        self.body:setLinearVelocity(x, y)
+        self.posCounter = self.posCounter + 1
     end
 
-    -- Draw function (similar to Player's draw function)
-    function ghost.draw(self)
-        local x = self.body:getX() - ghost.width
-        local y = self.body:getY() - 32 * 0.5
-
-        love.graphics.draw(assets.tileset, assets.ghost, x, y, 0, ghost.scaleX, ghost.scaleY)
+    --to set pos of player every frame
+    function ghost.setPos(self)
+        ghost.body:setPosisition(ghost.all_pos[self.posCounter][1], ghost.all_pos[self.posCounter][2])
+        self.posCounter = self.posCounter - 1
     end
 
     return ghost
