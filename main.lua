@@ -1,6 +1,7 @@
 -- Importing classes
 local playerClass = require('player')
 local platformClass = require('platform')
+local ghostClass = require('ghost')
 
 -- Importing Assets
 print('Loading Assets.....')
@@ -26,6 +27,7 @@ love.physics.setMeter(128) -- the height of a meter
 local world = love.physics.newWorld(0, 4 * 9.81 * 128, true)
 
 local player = playerClass(WIDTH / 2, HEIGHT - 100, world)
+local ghost = ghostClass(WIDTH - 16, HEIGHT - 100, world)
 
 local platforms = {}
 
@@ -54,6 +56,7 @@ function love.update(dt)
 
   -- move player with keyboard
   player:move()
+  ghost:autoMove(player.body:getX())
 end
 
 -- When two bodies start colliding
@@ -87,4 +90,5 @@ function love.draw()
   end
   --to draw player
   player:draw()
+  ghost:draw()
 end
