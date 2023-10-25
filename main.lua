@@ -13,6 +13,9 @@ lvlgen = require('level_generator')
 
 local isGrounded = true
 
+--Temp states
+game_ghost_Mode = false
+
 function love.load()
   love.window.setMode(WIDTH, HEIGHT)
   --love.graphics.setBackgroundColor(150/255, 200/255, 255/255)
@@ -20,6 +23,7 @@ function love.load()
   world = love.physics.newWorld(0, 2 * 9.81 * 128, true)
   -- Get Info about collisions
   world:setCallbacks(beginContact, endContact)
+
 
   lvlgen:LoadLevel()
 end
