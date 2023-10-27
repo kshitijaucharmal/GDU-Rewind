@@ -35,12 +35,16 @@ function Ghost(x, y, world, player)
         local playerPos = { player.body:getX(), player.body:getY() }
         table.insert(self.all_pos, playerPos)
 
+        --here posCounter will inc when we store the positions
         self.posCounter = self.posCounter + 1
     end
 
     --to set pos of player every frame
     function ghost.setPos(self)
+        --as here first index is x then y
         ghost.body:setPosisition(ghost.all_pos[self.posCounter][1], ghost.all_pos[self.posCounter][2])
+
+        --posCounter will dec as we retrive the positions
         self.posCounter = self.posCounter - 1
     end
 
@@ -56,9 +60,9 @@ function Ghost(x, y, world, player)
             scaleX = -self.scaleX
         end
 
-        -- Draw Player Sprite
+        -- Draw Ghost sprite Sprite
         love.graphics.setColor(0.05, 0.05, 0.05)
-        love.graphics.draw(assets.tileset, assets.player, x, y, 0, scaleX, self.scaleY)
+        love.graphics.draw(assets.tileset, assets.ghost, x, y, 0, scaleX, self.scaleY)
         love.graphics.setColor(1, 1, 1)
 
         -- Draw hitbox

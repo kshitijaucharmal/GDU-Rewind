@@ -1,4 +1,3 @@
-
 -- Categories
 -- 1 -> Default
 -- 2 -> Player
@@ -31,7 +30,7 @@ function Mapper()
       tile.fixture:setCategory(5)
     elseif compareColors(color, colors.blue) then
       tile = tileClass(assets.finish, x, y, world, "static")
-      tile.fixture:setCategory(5)
+      tile.fixture:setUserData("Finish")
     else
       print("Wrong Color")
     end

@@ -10,6 +10,9 @@ cellSize = WIDTH / assets.levelImgData:getWidth()
 
 -- Load LevelLoader
 lvlgen = require('level_generator')
+ghostClass = require('ghost')
+
+ghost = ghostClass()
 
 local isGrounded = true
 
@@ -34,6 +37,10 @@ function beginContact(a, b, coll)
     -- Just landed on ground
     isGrounded = true
   end
+  if a:getUserData() == "Finish" and b:getUserData() == "Player" then
+    -- Just landed on ground
+    game_ghost_Mode = true
+  end
 end
 
 -- When two bodies end colliding
@@ -45,6 +52,10 @@ function love.update(dt)
   world:update(dt)
 
   player:move()
+
+  if game_ghost_Mode then
+    ghos
+  end
 end
 
 function love.keypressed(key)
