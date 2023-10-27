@@ -12,7 +12,6 @@ cellSize = WIDTH / assets.levelImgData:getWidth()
 lvlgen = require('level_generator')
 ghostClass = require('ghost')
 
-ghost = ghostClass()
 
 local isGrounded = true
 
@@ -28,7 +27,8 @@ function love.load()
   world:setCallbacks(beginContact, endContact)
 
 
-  lvlgen:LoadLevel()
+  lvlgen:LoadLevel(assets.level, assets.levelImgData)
+  ghost = ghostClass(100, 100, world)
 end
 
 -- When two bodies start colliding
@@ -54,7 +54,9 @@ function love.update(dt)
   player:move()
 
   if game_ghost_Mode then
-    ghos
+    ghost:setPos()
+  else
+    ghost:storePos()
   end
 end
 
@@ -62,6 +64,10 @@ function love.keypressed(key)
   if isGrounded and (key == 'w' or key == 'up') then
     player:jump()
     isGrounded = false
+  end
+
+  if key == 't' then
+    game_ghost_Mode = not game_ghost_Mode
   end
 end
 
@@ -74,4 +80,6 @@ end
 function love.draw()
   love.graphics.draw(assets.bg, 0, 0, 0, 1, 0.7)
   lvlgen:draw()
+
+  ghost:draw()
 end

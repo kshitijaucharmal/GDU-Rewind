@@ -1,7 +1,7 @@
 -- Import the Player module
 
 
-function Ghost(x, y, world, player)
+function Ghost(x, y, world)
     local ghost = {}
 
     -- all players position
@@ -13,7 +13,7 @@ function Ghost(x, y, world, player)
     -- Properties
     ghost.width = player.width
     ghost.height = player.height
-    ghost.scaleX = -1 -- Mirrored horizontally
+    ghost.scaleX = (player.width / assets.tileSize) * 2 -- Mirrored horizontally
     ghost.scaleY = 32 / assets.tileSize
 
     -- flipped
@@ -26,6 +26,7 @@ function Ghost(x, y, world, player)
     ghost.fixture:setUserData("Ghost")
     ghost.fixture:setFriction(0)
     ghost.body:setFixedRotation(true)
+    ghost.fixture:setMask(5)
 
     -- Speed for automatic movement
 
@@ -41,8 +42,12 @@ function Ghost(x, y, world, player)
 
     --to set pos of player every frame
     function ghost.setPos(self)
+        if self.posCounter <= 0 then
+            return
+        end
+
         --as here first index is x then y
-        ghost.body:setPosisition(ghost.all_pos[self.posCounter][1], ghost.all_pos[self.posCounter][2])
+        ghost.body:setPosition(ghost.all_pos[self.posCounter][1], ghost.all_pos[self.posCounter][2])
 
         --posCounter will dec as we retrive the positions
         self.posCounter = self.posCounter - 1
@@ -61,7 +66,7 @@ function Ghost(x, y, world, player)
         end
 
         -- Draw Ghost sprite Sprite
-        love.graphics.setColor(0.05, 0.05, 0.05)
+        love.graphics.setColor(0.5, 0.5, 0.5)
         love.graphics.draw(assets.tileset, assets.ghost, x, y, 0, scaleX, self.scaleY)
         love.graphics.setColor(1, 1, 1)
 

@@ -7,7 +7,7 @@ function Assets()
   --added extra black n white tileset
   assets.tileset2 = love.graphics.newImage("assets/spritesheet_retina(black n white).png")
 
-  assets.levelImgData = love.image.newImageData("assets/map4.png")
+  assets.levelImgData = love.image.newImageData("assets/levels/map3.png")
   assets.level = love.graphics.newImage(assets.levelImgData)
 
   assets.bg = love.graphics.newImage("assets/Backgrounds/colored_talltrees.png")
