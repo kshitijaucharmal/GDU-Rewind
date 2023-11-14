@@ -27,7 +27,6 @@ local isGrounded = true
 game_ghost_Mode = false
 
 
-
 function Lvl1State:init()
     push:setupScreen(virtual_WIDTH, virtual_HEIGHT, WIDTH, HEIGHT, {
         vsync = true,
@@ -44,6 +43,11 @@ function Lvl1State:init()
 
     lvlgen:LoadLevel(assets.level1, assets.level1ImgData)
     ghost = ghostClass(100, 100, world)
+
+    --to store all ghosts
+    all_ghosts = {}
+
+    self.ghostSpawnTimer = 0
 end
 
 -- When two bodies start colliding
@@ -74,8 +78,21 @@ function Lvl1State:update(dt)
     player:move()
 
     if game_ghost_Mode then
+        --will set pos of player
         ghost:setPos()
+
+        --update ghost spawn time
+        self.ghostSpawnTimer = self.ghostSpawnTimer + dt
+
+        if self.ghostSpawnTimer > 1 then
+            local newGhost = ghostClass(100, 100, world, player)
+            newGhost:setPos()
+            table.insert(all_ghosts, newGhost)
+
+            self.ghostSpawnTimer = 0
+        end
     else
+        --will store pos of player
         ghost:storePos()
     end
 end
@@ -100,6 +117,11 @@ function Lvl1State:draw()
 
     if game_ghost_Mode then
         ghost:draw()
+
+        --Draw all ghost
+        for _, ghostInstance in ipairs(all_ghosts) do
+            ghostInstance:draw()
+        end
     end
     push:finish()
 end
