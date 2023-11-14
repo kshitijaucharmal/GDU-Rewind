@@ -63,6 +63,11 @@ function endContact(a, b, coll)
     -- Nothing here yet
 end
 
+--To resize the screen
+function love.resize(w, h)
+    push:resize(w, h)
+end
+
 function Lvl1State:update(dt)
     world:update(dt)
 

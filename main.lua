@@ -22,11 +22,6 @@ function love.load()
   gStateMachine:change("level1")
 end
 
---To resize the screen
-function love.resize(w, h)
-  push:resize(w, h)
-end
-
 function love.update(dt)
   if love.keypressed('escape') then
     love.event.quit()
