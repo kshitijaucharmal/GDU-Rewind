@@ -7,8 +7,11 @@ function Assets()
   --added extra black n white tileset
   assets.tileset2 = love.graphics.newImage("assets/spritesheet_retina(black n white).png")
 
-  assets.levelImgData = love.image.newImageData("assets/levels/map3.png")
-  assets.level = love.graphics.newImage(assets.levelImgData)
+  --Different levels diff images
+
+  --1) Level 1
+  assets.level1ImgData = love.image.newImageData("assets/levels/map1.png")
+  assets.level1 = love.graphics.newImage(assets.level1ImgData)
 
   assets.bg = love.graphics.newImage("assets/Backgrounds/colored_talltrees.png")
 
@@ -19,10 +22,14 @@ function Assets()
 
   assets.blank = love.graphics.newQuad(assets.tileSize * 6, assets.tileSize * 8, assets.tileSize, assets.tileSize,
     assets.tileset:getWidth(), assets.tileset:getHeight())
+
+  --trees and ground
   assets.ground = love.graphics.newQuad(assets.tileSize * 2, assets.tileSize * 5, assets.tileSize, assets.tileSize,
     assets.tileset:getWidth(), assets.tileset:getHeight())
   assets.tree = love.graphics.newQuad(assets.tileSize * 2, assets.tileSize * 4, assets.tileSize, assets.tileSize,
     assets.tileset:getWidth(), assets.tileset:getHeight())
+
+  --finish pole
   assets.finish = love.graphics.newQuad(assets.tileSize * 3, assets.tileSize * 9, assets.tileSize, assets.tileSize,
     assets.tileset:getWidth(), assets.tileset:getHeight())
 
