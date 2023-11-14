@@ -3,13 +3,18 @@ Class = require 'libraries/class'
 require('colors')
 -- Assets
 assets = require('load_assets')
+push = require "libraries/push"
 
 Lvl1State = Class { __includes = BaseState }
 
--- Globals
-WIDTH = 800
-HEIGHT = 640
-cellSize = WIDTH / assets.level1ImgData:getWidth()
+-- Globals 5:4 ratio
+WIDTH = 1250
+HEIGHT = 1000
+
+virtual_WIDTH = 800
+virtual_HEIGHT = 640
+
+cellSize = virtual_WIDTH / assets.level1ImgData:getWidth()
 
 -- Load LevelLoader
 lvlgen = require('level_generator')
@@ -24,7 +29,12 @@ game_ghost_Mode = false
 
 
 function Lvl1State:init()
-    love.window.setMode(WIDTH, HEIGHT)
+    push:setupScreen(virtual_WIDTH, virtual_HEIGHT, WIDTH, HEIGHT, {
+        vsync = true,
+        fullscreen = false,
+        resizable = true
+    })
+
     --love.graphics.setBackgroundColor(150/255, 200/255, 255/255)
     love.physics.setMeter(128)
     world = love.physics.newWorld(0, 2 * 9.81 * 128, true)
@@ -66,13 +76,9 @@ function Lvl1State:update(dt)
 end
 
 function love.keypressed(key)
-    if isGrounded and (key == 'w' or key == 'up') then
+    if isGrounded and (key == 'up' or key == "space") then
         player:jump()
         isGrounded = false
-    end
-
-    if key == 't' then
-        game_ghost_Mode = not game_ghost_Mode
     end
 end
 
@@ -83,10 +89,12 @@ function love.keyreleased(key)
 end
 
 function Lvl1State:draw()
+    push:start()
     love.graphics.draw(assets.bg, 0, 0, 0, 1, 0.7)
     lvlgen:draw()
 
     if game_ghost_Mode then
         ghost:draw()
     end
+    push:finish()
 end
