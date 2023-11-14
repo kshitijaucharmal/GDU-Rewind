@@ -48,6 +48,9 @@ function Lvl1State:init()
     all_ghosts = {}
 
     self.ghostSpawnTimer = 0
+
+    --loading music
+    bg_music = love.audio.newSource("assets/sounds/Space theme bg.mp3", "stream")
 end
 
 -- When two bodies start colliding
@@ -75,6 +78,7 @@ end
 function Lvl1State:update(dt)
     world:update(dt)
 
+    bg_music:play()
     player:move()
 
     if game_ghost_Mode then

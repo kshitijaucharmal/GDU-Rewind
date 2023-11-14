@@ -13,7 +13,7 @@ function Assets()
   assets.level1ImgData = love.image.newImageData("assets/levels/map1.png")
   assets.level1 = love.graphics.newImage(assets.level1ImgData)
 
-  assets.bg = love.graphics.newImage("assets/Backgrounds/colored_talltrees.png")
+  assets.bg = love.graphics.newImage("assets/Backgrounds/space_bg.png")
 
   assets.player = love.graphics.newQuad(assets.tileSize * 9, assets.tileSize * 5, assets.tileSize, assets.tileSize,
     assets.tileset:getWidth(), assets.tileset:getHeight())
@@ -32,6 +32,8 @@ function Assets()
   --finish pole
   assets.finish = love.graphics.newQuad(assets.tileSize * 3, assets.tileSize * 9, assets.tileSize, assets.tileSize,
     assets.tileset:getWidth(), assets.tileset:getHeight())
+
+
 
   return assets
 end
