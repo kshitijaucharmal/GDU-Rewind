@@ -20,12 +20,12 @@ cellSize = virtual_WIDTH / assets.level1ImgData:getWidth()
 lvlgen = require('level_generator')
 ghostClass = require('ghost')
 
-
 local isGrounded = true
 
 --Track ghost state
 game_ghost_Mode = false
 
+all_ghosts = {}
 
 function Lvl1State:init()
     push:setupScreen(virtual_WIDTH, virtual_HEIGHT, WIDTH, HEIGHT, {
@@ -42,10 +42,8 @@ function Lvl1State:init()
 
 
     lvlgen:LoadLevel(assets.level1, assets.level1ImgData)
-    ghost = ghostClass(100, 100, world)
-
-    --to store all ghosts
-    all_ghosts = {}
+    local ghost = ghostClass(100, 100, world)
+    table.insert(all_ghosts, ghost)
 
     self.ghostSpawnTimer = 0
 
@@ -60,7 +58,7 @@ function beginContact(a, b, coll)
         isGrounded = true
     end
     if a:getUserData() == "Finish" and b:getUserData() == "Player" then
-        -- Just landed on ground
+        -- Reached Finish Line
         game_ghost_Mode = true
     end
 end
@@ -75,6 +73,14 @@ function love.resize(w, h)
     push:resize(w, h)
 end
 
+function all_ghosts_dead()
+  for _, ghost in ipairs(all_ghosts) do
+    if ghost.dead then
+      return true
+    end
+  end
+end
+
 function Lvl1State:update(dt)
     world:update(dt)
 
@@ -82,22 +88,26 @@ function Lvl1State:update(dt)
     player:move()
 
     if game_ghost_Mode then
-        --will set pos of player
-        ghost:setPos()
-
-        --update ghost spawn time
-        self.ghostSpawnTimer = self.ghostSpawnTimer + dt
-
-        if self.ghostSpawnTimer > 1 then
-            local newGhost = ghostClass(100, 100, world, player)
-            newGhost:setPos()
-            table.insert(all_ghosts, newGhost)
-
-            self.ghostSpawnTimer = 0
+      for _, ghost in ipairs(all_ghosts) do
+        if not ghost.dead then
+          ghost:setPos()
         end
+      end
+
+      --update ghost spawn time
+      self.ghostSpawnTimer = self.ghostSpawnTimer + dt
+
+      if self.ghostSpawnTimer > 2 then
+        local newGhost = all_ghosts[1]:clone()
+        table.insert(all_ghosts, newGhost)
+
+        self.ghostSpawnTimer = 0
+      end
     else
+      for _, ghost in ipairs(all_ghosts) do
         --will store pos of player
         ghost:storePos()
+      end
     end
 end
 
@@ -119,13 +129,15 @@ function Lvl1State:draw()
     love.graphics.draw(assets.bg, 0, 0, 0, 1, 0.7)
     lvlgen:draw()
 
-    if game_ghost_Mode then
+    if game_ghost_Mode and not all_ghosts_dead() then
+      for _, ghost in ipairs(all_ghosts) do
         ghost:draw()
 
         --Draw all ghost
-        for _, ghostInstance in ipairs(all_ghosts) do
-            ghostInstance:draw()
-        end
+        --for _, ghostInstance in ipairs(all_ghosts) do
+            --ghostInstance:draw()
+        --end
+      end
     end
     push:finish()
 end

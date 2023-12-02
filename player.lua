@@ -2,6 +2,8 @@ function Player(x, y, world)
   local player = {}
   player.debug = false
 
+  player.start_pos = { x, y }
+
   player.width = 16
   player.height = 28
   player.scaleX = (player.width / assets.tileSize) * 2
@@ -19,11 +21,9 @@ function Player(x, y, world)
   player.fixture:setFriction(0)
   player.body:setFixedRotation(true)
 
-
-
   -- chars
   player.jumpForce = 800
-  player.speed = 200
+  player.speed = 250
 
   -- move with keyboard
   function player.move(self)
@@ -48,6 +48,10 @@ function Player(x, y, world)
     x, y = self.body:getLinearVelocity()
     -- Set y velocity to jumpForce
     self.body:setLinearVelocity(x, -self.jumpForce)
+  end
+
+  function player.reset_pos(self)
+    self.body:setPosition(100, 100)
   end
 
   function player.draw(self)

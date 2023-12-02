@@ -3,6 +3,11 @@
 
 function Ghost(x, y, world)
     local ghost = {}
+    ghost.x = x
+    ghost.y = y
+    ghost.world = world
+
+    ghost.dead = false
 
     -- all players position
     ghost.all_pos = {}
@@ -28,8 +33,13 @@ function Ghost(x, y, world)
     ghost.body:setFixedRotation(true)
     ghost.fixture:setMask(5)
 
-    -- Speed for automatic movement
-
+    function ghost.clone(self)
+      local clone = {}
+      clone = Ghost(self.x, self.y, self.world)
+      clone.all_pos = self.all_pos
+      clone.posCounter = self.posCounter
+      return clone
+    end
 
     --to store pos of player every frame
     function ghost.storePos(self)
@@ -43,7 +53,8 @@ function Ghost(x, y, world)
     --to set pos of player every frame
     function ghost.setPos(self)
         if self.posCounter <= 0 then
-            return
+          ghost.dead = true
+          return
         end
 
         --as here first index is x then y
