@@ -1,6 +1,6 @@
 function Player(x, y, world)
   local player = {}
-  player.debug = false
+  player.debug = true
 
   player.start_pos = { x, y }
 
@@ -20,6 +20,8 @@ function Player(x, y, world)
   player.fixture:setUserData("Player")
   player.fixture:setFriction(0)
   player.body:setFixedRotation(true)
+  player.fixture:setCategory(1)
+  player.fixture:setMask(5)
 
   -- chars
   player.jumpForce = 800
@@ -51,7 +53,7 @@ function Player(x, y, world)
   end
 
   function player.reset_pos(self)
-    self.body:setPosition(100, 100)
+    player.body:setPosition(player_start_pos[1], player_start_pos[2])
   end
 
   function player.draw(self)

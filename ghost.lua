@@ -11,7 +11,7 @@ function Ghost(x, y, world)
 
     ghost.posCounter = 1
 
-    ghost.debug = false
+    ghost.debug = true
 
     -- Properties
     ghost.width = player.width
@@ -27,21 +27,18 @@ function Ghost(x, y, world)
     ghost.shape = love.physics.newRectangleShape(ghost.width, ghost.height)
     ghost.fixture = love.physics.newFixture(ghost.body, ghost.shape)
     ghost.fixture:setUserData("Ghost")
-    ghost.fixture:setFriction(0)
     ghost.body:setFixedRotation(true)
     ghost.fixture:setMask(5)
 
     function ghost.clone(self)
       local clone = {}
-      clone = Ghost(self.x, self.y, self.world)
-      clone.all_pos = self.all_pos
-      clone.posCounter = self.posCounter
+      clone = Ghost(-100, -100, self.world)
       return clone
     end
 
     --to set pos of player every frame
     function ghost.setPos(self)
-        if self.posCounter >= #player_positions then
+        if self.posCounter <= 0 then
           ghost.dead = true
           return
         end
@@ -50,7 +47,7 @@ function Ghost(x, y, world)
         ghost.body:setPosition(player_positions[self.posCounter][1], player_positions[self.posCounter][2])
 
         --posCounter will dec as we retrive the positions
-        self.posCounter = self.posCounter + 1
+        self.posCounter = self.posCounter - 1
     end
 
     function ghost.draw(self)
@@ -66,14 +63,12 @@ function Ghost(x, y, world)
         end
 
         -- Draw Ghost sprite Sprite
-        love.graphics.setColor(0.5, 0.5, 0.5)
         love.graphics.draw(assets.tileset, assets.ghost, x, y, 0, scaleX, self.scaleY)
-        love.graphics.setColor(1, 1, 1)
 
         -- Draw hitbox
         if self.debug then
-            love.graphics.setColor(0, 0, 1)
-            love.graphics.circle("line", self.body:getX(), self.body:getY(), self.shape:getRadius())
+            love.graphics.setColor(0, 1, 0)
+            love.graphics.circle("line", ghost.body:getX(), ghost.body:getY(), ghost.shape:getRadius())
             love.graphics.setColor(1, 1, 1)
         end
     end

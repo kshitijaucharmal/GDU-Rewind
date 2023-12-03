@@ -17,7 +17,7 @@ function Assets()
 
   assets.player = love.graphics.newQuad(assets.tileSize * 9, assets.tileSize * 5, assets.tileSize, assets.tileSize,
     assets.tileset:getWidth(), assets.tileset:getHeight())
-  assets.ghost = love.graphics.newQuad(assets.tileSize * 9, assets.tileSize * 5, assets.tileSize, assets.tileSize,
+  assets.ghost = love.graphics.newQuad(assets.tileSize * 9, assets.tileSize * 6, assets.tileSize, assets.tileSize,
     assets.tileset2:getWidth(), assets.tileset2:getHeight())
 
   assets.blank = love.graphics.newQuad(assets.tileSize * 6, assets.tileSize * 8, assets.tileSize, assets.tileSize,

@@ -10,6 +10,7 @@ Lvl1State = Class { __includes = BaseState }
 -- Globals 5:4 ratio
 WIDTH = 1250
 HEIGHT = 1000
+ghost_spawn_timer = 1
 
 virtual_WIDTH = 800
 virtual_HEIGHT = 640
@@ -19,6 +20,7 @@ cellSize = virtual_WIDTH / assets.level1ImgData:getWidth()
 -- Load LevelLoader
 lvlgen = require('level_generator')
 ghostClass = require('ghost')
+playerClass = require('player')
 
 local isGrounded = true
 
@@ -26,10 +28,15 @@ local isGrounded = true
 game_ghost_Mode = false
 player_positions = {}
 
+all_ghosts = {}
+no_player = false
+player_at_start = true
+player_start_pos = {}
+
 function Lvl1State:init()
     push:setupScreen(virtual_WIDTH, virtual_HEIGHT, WIDTH, HEIGHT, {
         vsync = true,
-        fullscreen = false,
+        fullscreen = true,
         resizable = true
     })
 
@@ -39,11 +46,12 @@ function Lvl1State:init()
     -- Get Info about collisions
     world:setCallbacks(beginContact, endContact)
 
-
     lvlgen:LoadLevel(assets.level1, assets.level1ImgData)
-    ghost = ghostClass(100, 100, world)
+    local ghost = ghostClass(-100, -100, world)
+    table.insert(all_ghosts, ghost)
 
     self.ghostSpawnTimer = 0
+    player_start_pos = { player.body:getX(), player.body:getY() }
 
     --loading music
     bg_music = love.audio.newSource("assets/sounds/Space theme bg.mp3", "stream")
@@ -55,9 +63,15 @@ function beginContact(a, b, coll)
         -- Just landed on ground
         isGrounded = true
     end
+    if a:getUserData() == "Ghost" and b:getUserData() == "Player" then
+        -- DIEEEE!!
+        player.fixture:destroy()
+    end
     if a:getUserData() == "Finish" and b:getUserData() == "Player" then
         -- Reached Finish Line
+        all_ghosts[1].posCounter = #player_positions
         game_ghost_Mode = true
+        player_at_start = false
     end
 end
 
@@ -71,32 +85,35 @@ function love.resize(w, h)
     push:resize(w, h)
 end
 
-function all_ghosts_dead()
-  if ghost.dead then
-    return true
-  end
-end
-
 function Lvl1State:update(dt)
     world:update(dt)
 
     bg_music:play()
     player:move()
-    print(#player_positions)
 
-    if game_ghost_Mode and not all_ghosts_dead() then
-      ghost:setPos()
-
+    if game_ghost_Mode then
+      if not player_at_start then
+        player:reset_pos()
+        player_at_start = true
+      end
       --update ghost spawn time
       self.ghostSpawnTimer = self.ghostSpawnTimer + dt
-
-      --if self.ghostSpawnTimer > 1 then
-          --local newGhost = ghostClass(100, 100, world, player)
-          --newGhost:setPos()
-          --table.insert(all_ghosts, newGhost)
-
-          --self.ghostSpawnTimer = 0
-      --end
+      for i = 1, #all_ghosts, 1 do
+        if not all_ghosts[i].dead then
+          all_ghosts[i]:setPos()
+        end
+      end
+      for i = #all_ghosts,1, -1 do
+        if all_ghosts[i].dead then
+          table.remove(all_ghosts, i)
+        end
+      end
+      if self.ghostSpawnTimer > ghost_spawn_timer then
+        local newGhost = all_ghosts[1]:clone()
+        newGhost.posCounter = #player_positions
+        table.insert(all_ghosts, newGhost)
+        self.ghostSpawnTimer = 0
+      end
     else
         --will store pos of player
         local playerPos = { player.body:getX(), player.body:getY() }
@@ -105,7 +122,7 @@ function Lvl1State:update(dt)
 end
 
 function love.keypressed(key)
-    if isGrounded and (key == 'up' or key == "space") then
+    if isGrounded and (key == 'up' or key == "w") then
         player:jump()
         isGrounded = false
     end
@@ -122,13 +139,10 @@ function Lvl1State:draw()
     love.graphics.draw(assets.bg, 0, 0, 0, 1, 0.7)
     lvlgen:draw()
 
-    if game_ghost_Mode and not all_ghosts_dead() then
-        ghost:draw()
-
-        --Draw all ghost
-        --for _, ghostInstance in ipairs(all_ghosts) do
-            --ghostInstance:draw()
-        --end
+    for i = 1, #all_ghosts, 1 do
+      if not all_ghosts[i].dead then
+        all_ghosts[i]:draw()
+      end
     end
     push:finish()
 end

@@ -15,15 +15,13 @@ function Mapper()
     if compareColors(color, colors.white) then
       tile = tileClass(assets.blank, x, y, world, "static")
       tile.fixture:setUserData("Blank")
-      tile.fixture:setCategory(3)
+      --tile.fixture:setCategory(3)
     elseif compareColors(color, colors.black) then
       tile = tileClass(assets.ground, x, y, world, "static")
       tile.fixture:setUserData("Ground")
       tile.fixture:setCategory(3)
     elseif compareColors(color, colors.red) then
       player = playerClass(x, y, world)
-      player.fixture:setCategory(1)
-      player.fixture:setMask(5)
       tile = player
     elseif compareColors(color, colors.green) then
       tile = tileClass(assets.tree, x, y, world, "dynamic")
