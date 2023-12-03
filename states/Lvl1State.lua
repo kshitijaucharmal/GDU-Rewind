@@ -24,8 +24,7 @@ local isGrounded = true
 
 --Track ghost state
 game_ghost_Mode = false
-
-all_ghosts = {}
+player_positions = {}
 
 function Lvl1State:init()
     push:setupScreen(virtual_WIDTH, virtual_HEIGHT, WIDTH, HEIGHT, {
@@ -42,8 +41,7 @@ function Lvl1State:init()
 
 
     lvlgen:LoadLevel(assets.level1, assets.level1ImgData)
-    local ghost = ghostClass(100, 100, world)
-    table.insert(all_ghosts, ghost)
+    ghost = ghostClass(100, 100, world)
 
     self.ghostSpawnTimer = 0
 
@@ -74,10 +72,8 @@ function love.resize(w, h)
 end
 
 function all_ghosts_dead()
-  for _, ghost in ipairs(all_ghosts) do
-    if ghost.dead then
-      return true
-    end
+  if ghost.dead then
+    return true
   end
 end
 
@@ -86,28 +82,25 @@ function Lvl1State:update(dt)
 
     bg_music:play()
     player:move()
+    print(#player_positions)
 
-    if game_ghost_Mode then
-      for _, ghost in ipairs(all_ghosts) do
-        if not ghost.dead then
-          ghost:setPos()
-        end
-      end
+    if game_ghost_Mode and not all_ghosts_dead() then
+      ghost:setPos()
 
       --update ghost spawn time
       self.ghostSpawnTimer = self.ghostSpawnTimer + dt
 
-      if self.ghostSpawnTimer > 2 then
-        local newGhost = all_ghosts[1]:clone()
-        table.insert(all_ghosts, newGhost)
+      --if self.ghostSpawnTimer > 1 then
+          --local newGhost = ghostClass(100, 100, world, player)
+          --newGhost:setPos()
+          --table.insert(all_ghosts, newGhost)
 
-        self.ghostSpawnTimer = 0
-      end
+          --self.ghostSpawnTimer = 0
+      --end
     else
-      for _, ghost in ipairs(all_ghosts) do
         --will store pos of player
-        ghost:storePos()
-      end
+        local playerPos = { player.body:getX(), player.body:getY() }
+        table.insert(player_positions, playerPos)
     end
 end
 
@@ -130,14 +123,12 @@ function Lvl1State:draw()
     lvlgen:draw()
 
     if game_ghost_Mode and not all_ghosts_dead() then
-      for _, ghost in ipairs(all_ghosts) do
         ghost:draw()
 
         --Draw all ghost
         --for _, ghostInstance in ipairs(all_ghosts) do
             --ghostInstance:draw()
         --end
-      end
     end
     push:finish()
 end

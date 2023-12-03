@@ -9,9 +9,7 @@ function Ghost(x, y, world)
 
     ghost.dead = false
 
-    -- all players position
-    ghost.all_pos = {}
-    ghost.posCounter = 0
+    ghost.posCounter = 1
 
     ghost.debug = false
 
@@ -41,27 +39,18 @@ function Ghost(x, y, world)
       return clone
     end
 
-    --to store pos of player every frame
-    function ghost.storePos(self)
-        local playerPos = { player.body:getX(), player.body:getY() }
-        table.insert(self.all_pos, playerPos)
-
-        --here posCounter will inc when we store the positions
-        self.posCounter = self.posCounter + 1
-    end
-
     --to set pos of player every frame
     function ghost.setPos(self)
-        if self.posCounter <= 0 then
+        if self.posCounter >= #player_positions then
           ghost.dead = true
           return
         end
 
         --as here first index is x then y
-        ghost.body:setPosition(ghost.all_pos[self.posCounter][1], ghost.all_pos[self.posCounter][2])
+        ghost.body:setPosition(player_positions[self.posCounter][1], player_positions[self.posCounter][2])
 
         --posCounter will dec as we retrive the positions
-        self.posCounter = self.posCounter - 1
+        self.posCounter = self.posCounter + 1
     end
 
     function ghost.draw(self)
