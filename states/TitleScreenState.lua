@@ -5,6 +5,7 @@ button_width = virtual_WIDTH / 3
 button_height = 32
 local buttons = {}
 
+
 local function next()
     for i, button in ipairs(buttons) do
         if (button.selected) then
@@ -24,6 +25,13 @@ local function newButton(text, fn, selected)
 end
 
 function TitleScreenState:init()
+    main_menu = love.graphics.newImage("assets/mainmenubg.png")
+    UI_sfx_move = love.audio.newSource("assets/sounds/UI.mp3", "static")
+    UI_sfx_selected = love.audio.newSource("assets/sounds/UI_selected.mp3", "static")
+    main_menu_bg = love.audio.newSource("assets/sounds/Main menu bg.mp3", "stream")
+
+    main_menu_bg:play()
+
     table.insert(buttons, newButton(
         "Start Game",
         function()
@@ -54,6 +62,9 @@ function TitleScreenState:update(dt)
 end
 
 function TitleScreenState:draw()
+    --bg image
+    love.graphics.draw(main_menu, -25, 0, 0, 0.7, 0.7)
+    -- love.graphics.draw(drawable,x,y,r,sx,sy,ox,oy)
     local margin = 20
     local total_height = (button_height + margin) * #buttons
 
@@ -119,6 +130,7 @@ function TitleScreenState:check_keypressed(key)
         selectNo = next()
         print(selectNo)
         buttons[(selectNo) % #buttons + 1].selected = true
+        UI_sfx_move:play()
     end
 
     if key == "return" then
@@ -127,6 +139,8 @@ function TitleScreenState:check_keypressed(key)
                 button.fn()
             end
         end
+        UI_sfx_selected:play()
+        main_menu_bg:stop()
     end
 
     -- if key == "up" then

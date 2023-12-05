@@ -34,6 +34,10 @@ player_at_start = true
 player_start_pos = {}
 
 function Lvl1State:init()
+  --sound effects
+  rewind = love.audio.newSource("assets/sounds/Rewind - Sound Effect.mp3", "static")
+  jump_sfx = love.audio.newSource("assets/sounds/Jump effect.mp3", "static")
+
   --love.graphics.setBackgroundColor(150/255, 200/255, 255/255)
   love.physics.setMeter(128)
   world = love.physics.newWorld(0, 2 * 9.81 * 128, true)
@@ -86,6 +90,10 @@ function Lvl1State:update(dt)
   player:move()
 
   if game_ghost_Mode then
+    -- --play rewind sfx
+    rewind:play()
+    rewind:stop()
+
     if not player_at_start then
       player:reset_pos()
       player_at_start = true
@@ -119,6 +127,7 @@ function Lvl1State:check_keypressed(key)
   if isGrounded and (key == 'up' or key == "w") then
     player:jump()
     isGrounded = false
+    jump_sfx:play()
   end
 end
 
