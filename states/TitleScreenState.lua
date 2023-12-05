@@ -5,6 +5,7 @@ button_width = virtual_WIDTH / 3
 button_height = 32
 local buttons = {}
 
+
 local function next()
     for i, button in ipairs(buttons) do
         if (button.selected) then
@@ -24,6 +25,7 @@ local function newButton(text, fn, selected)
 end
 
 function TitleScreenState:init()
+    main_menu = love.graphics.newImage("assets/mainmenubg.png")
     table.insert(buttons, newButton(
         "Start Game",
         function()
@@ -54,6 +56,9 @@ function TitleScreenState:update(dt)
 end
 
 function TitleScreenState:draw()
+    --bg image
+    love.graphics.draw(main_menu, -25, 0, 0, 0.7, 0.7)
+    -- love.graphics.draw(drawable,x,y,r,sx,sy,ox,oy)
     local margin = 20
     local total_height = (button_height + margin) * #buttons
 
