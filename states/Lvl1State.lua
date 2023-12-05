@@ -10,7 +10,7 @@ Lvl1State = Class { __includes = BaseState }
 -- Globals 5:4 ratio
 WIDTH = 1250
 HEIGHT = 1000
-ghost_spawn_timer = 1
+ghost_spawn_timer = 2
 
 virtual_WIDTH = 800
 virtual_HEIGHT = 640
