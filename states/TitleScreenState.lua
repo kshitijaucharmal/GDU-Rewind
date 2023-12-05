@@ -26,6 +26,12 @@ end
 
 function TitleScreenState:init()
     main_menu = love.graphics.newImage("assets/mainmenubg.png")
+    UI_sfx_move = love.audio.newSource("assets/sounds/UI.mp3", "static")
+    UI_sfx_selected = love.audio.newSource("assets/sounds/UI_selected.mp3", "static")
+    main_menu_bg = love.audio.newSource("assets/sounds/Main menu bg.mp3", "stream")
+
+    main_menu_bg:play()
+
     table.insert(buttons, newButton(
         "Start Game",
         function()
@@ -124,6 +130,7 @@ function TitleScreenState:check_keypressed(key)
         selectNo = next()
         print(selectNo)
         buttons[(selectNo) % #buttons + 1].selected = true
+        UI_sfx_move:play()
     end
 
     if key == "return" then
@@ -132,6 +139,8 @@ function TitleScreenState:check_keypressed(key)
                 button.fn()
             end
         end
+        UI_sfx_selected:play()
+        main_menu_bg:stop()
     end
 
     -- if key == "up" then
