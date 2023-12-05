@@ -24,7 +24,7 @@ function Mapper()
       player = playerClass(x, y, world)
       tile = player
     elseif compareColors(color, colors.green) then
-      tile = tileClass(assets.tree, x, y, world, "dynamic")
+      tile = tileClass(assets.tree, x, y, world, "static")
       tile.fixture:setCategory(5)
     elseif compareColors(color, colors.blue) then
       tile = tileClass(assets.finish, x, y, world, "static")

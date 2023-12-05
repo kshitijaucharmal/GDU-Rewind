@@ -15,7 +15,6 @@ function love.load()
     resizable = true
   })
   love.window.setMode(WIDTH, HEIGHT)
-  love.physics.setMeter(128)
   love.window.setTitle("REWIND")
 
   gStateMachine = StateMachine {
@@ -27,9 +26,6 @@ function love.load()
 end
 
 function love.update(dt)
-  if love.keypressed('escape') then
-    love.event.quit()
-  end
   gStateMachine:update(dt)
 end
 

@@ -11,7 +11,7 @@ function Ghost(x, y, world)
 
     ghost.posCounter = 1
 
-    ghost.debug = true
+    ghost.debug = false
 
     -- Properties
     ghost.width = player.width

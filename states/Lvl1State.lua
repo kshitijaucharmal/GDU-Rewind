@@ -29,9 +29,9 @@ game_ghost_Mode = false
 player_positions = {}
 
 all_ghosts = {}
-no_player = false
 player_at_start = true
 player_start_pos = {}
+player_dead = false
 
 function Lvl1State:init()
   --sound effects
@@ -44,7 +44,9 @@ function Lvl1State:init()
   -- Get Info about collisions
   world:setCallbacks(beginContact, endContact)
 
+  -- Spawn Level
   lvlgen:LoadLevel(assets.level1, assets.level1ImgData)
+
   local ghost = ghostClass(-100, -100, world)
   table.insert(all_ghosts, ghost)
 
@@ -63,7 +65,7 @@ function beginContact(a, b, coll)
   end
   if a:getUserData() == "Ghost" and b:getUserData() == "Player" then
     -- DIEEEE!!
-    player.fixture:destroy()
+    player_dead = true
   end
   if a:getUserData() == "Finish" and b:getUserData() == "Player" then
     -- Reached Finish Line
@@ -83,11 +85,30 @@ function love.resize(w, h)
   push:resize(w, h)
 end
 
+function reset_game()
+  -- Spawn Level
+  print('Game Reset')
+  player.body:setPosition(player_start_pos[1], player_start_pos[2])
+  game_ghost_Mode = false
+  player_at_start = true
+  player_dead = false
+  for i = 1, #all_ghosts, 1 do
+    all_ghosts[i].fixture:destroy()
+  end
+  all_ghosts = {}
+  local ghost = ghostClass(-100, -100, world)
+  table.insert(all_ghosts, ghost)
+end
+
 function Lvl1State:update(dt)
   world:update(dt)
 
   bg_music:play()
   player:move()
+
+  if player_dead then
+    reset_game()
+  end
 
   if game_ghost_Mode then
     -- --play rewind sfx
@@ -107,6 +128,7 @@ function Lvl1State:update(dt)
     end
     for i = #all_ghosts, 1, -1 do
       if all_ghosts[i].dead then
+        all_ghosts[i].fixture:destroy()
         table.remove(all_ghosts, i)
       end
     end
@@ -116,6 +138,7 @@ function Lvl1State:update(dt)
       table.insert(all_ghosts, newGhost)
       self.ghostSpawnTimer = 0
     end
+
   else
     --will store pos of player
     local playerPos = { player.body:getX(), player.body:getY() }
@@ -142,8 +165,6 @@ function Lvl1State:draw()
   lvlgen:draw()
 
   for i = 1, #all_ghosts, 1 do
-    if not all_ghosts[i].dead then
-      all_ghosts[i]:draw()
-    end
+    all_ghosts[i]:draw()
   end
 end

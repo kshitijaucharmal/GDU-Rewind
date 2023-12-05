@@ -1,6 +1,6 @@
 function Player(x, y, world)
   local player = {}
-  player.debug = true
+  player.debug = false
 
   player.start_pos = { x, y }
 
