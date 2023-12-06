@@ -32,6 +32,7 @@ function Lvl1State:init()
 
   -- Spawn Level
   lvlgen:LoadLevel(assets.level1, assets.level1ImgData)
+  lvlgen.setup_walls()
 
   local ghost = ghostClass(-100, -100, world)
   table.insert(all_ghosts, ghost)
@@ -111,9 +112,9 @@ function Lvl1State:update(dt)
     -- Shader Stuff
     ghostModeShader:send("u_vignette_opacity", 0.8)
     ghostModeShader:send("u_correct_ratio", false)
-    ghostModeShader:send("u_radius", 0.75)
+    ghostModeShader:send("u_radius", 0.8)
     ghostModeShader:send("u_softness", 0.45)
-    ghostModeShader:send("u_sepia_opacity", 0.75)
+    ghostModeShader:send("u_sepia_opacity", 0.5)
 
     -- --play rewind sfx
     rewind:play()
@@ -160,7 +161,7 @@ function Lvl1State:check_keyreleased(key)
 end
 
 function Lvl1State:draw()
-  love.graphics.draw(assets.bg, 0, 0, 0, 1, 0.7)
+  love.graphics.draw(assets.bg, 0, 0, 0, 1, 1)
   lvlgen:draw()
 
   for i = 1, #all_ghosts, 1 do

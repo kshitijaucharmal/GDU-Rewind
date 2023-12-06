@@ -21,6 +21,26 @@ function LevelLoader()
     end
   end
 
+  function lvlgen.setup_walls()
+    -- Create walls as static bodies
+    local leftWall = love.physics.newBody(world, 0, love.graphics.getHeight() / 2)
+    local rightWall = love.physics.newBody(world, virtual_WIDTH, love.graphics.getHeight() / 2)
+    local topWall = love.physics.newBody(world, love.graphics.getWidth() / 2, 0)
+    local bottomWall = love.physics.newBody(world, love.graphics.getWidth() / 2, love.graphics.getHeight())
+
+    -- Create shapes for the walls
+    local leftWallShape = love.physics.newEdgeShape(0, -love.graphics.getHeight() / 2, 0, love.graphics.getHeight() / 2)
+    local rightWallShape = love.physics.newEdgeShape(0, -love.graphics.getHeight() / 2, 0, love.graphics.getHeight() / 2)
+    local topWallShape = love.physics.newEdgeShape(-love.graphics.getWidth() / 2, 0, love.graphics.getWidth() / 2, 0)
+    local bottomWallShape = love.physics.newEdgeShape(-love.graphics.getWidth() / 2, 0, love.graphics.getWidth() / 2, 0)
+
+    -- Attach shapes to the walls
+    love.physics.newFixture(leftWall, leftWallShape)
+    love.physics.newFixture(rightWall, rightWallShape)
+    love.physics.newFixture(topWall, topWallShape)
+    love.physics.newFixture(bottomWall, bottomWallShape)
+  end
+
   function lvlgen.draw(self)
     for _, tile in ipairs(self.level) do
       tile:draw()
