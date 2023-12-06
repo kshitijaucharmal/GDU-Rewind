@@ -23,7 +23,7 @@ function Lvl1State:init()
   rewind = love.audio.newSource("assets/sounds/Rewind - Sound Effect.mp3", "static")
   jump_sfx = love.audio.newSource("assets/sounds/Jump effect.mp3", "static")
   bg_music = love.audio.newSource("assets/sounds/Space theme bg.mp3", "stream")
-
+  death_sfx = love.audio.newSource("assets/sounds/death_sfx.mp3", "static")
 
   --love.graphics.setBackgroundColor(150/255, 200/255, 255/255)
   love.physics.setMeter(128)
@@ -53,6 +53,7 @@ function Lvl1State:check_beginContact(a, b, coll)
   if a:getUserData() == "Ghost" and b:getUserData() == "Player" then
     -- DIEEEE!!
     player_dead = true
+    death_sfx:play()
   end
   if a:getUserData() == "Finish" and b:getUserData() == "Player" then
     -- Reached Finish Line
@@ -107,13 +108,14 @@ function Lvl1State:update(dt)
     ghostModeShader:send("u_softness", 0.45)
     ghostModeShader:send("u_sepia_opacity", 0.5)
 
-    -- --play rewind sfx
-    rewind:play()
-    rewind:stop()
+
+
 
     if not player_at_start then
       player:reset_pos()
       player_at_start = true
+      --play rewind sfx
+      rewind:play()
     end
     --update ghost spawn time
     ghostSpawnTimer = ghostSpawnTimer + dt
