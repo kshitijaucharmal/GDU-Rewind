@@ -1,6 +1,7 @@
 require "states/BaseState"
 require "states/Lvl1State"
 require "states/TitleScreenState"
+require "states/EndScreenState"
 require "StateMachine"
 push = require "libraries/push"
 
@@ -9,8 +10,10 @@ WIDTH = 1250
 HEIGHT = 1000
 
 --sound effects
-rewind = love.audio.newSource("assets/sounds/Rewind - Sound Effect.mp3", "static")
+rewind = love.audio.newSource("assets/sounds/Rewind_sfx.mp3", "static")
 jump_sfx = love.audio.newSource("assets/sounds/Jump effect.mp3", "static")
+victory = love.audio.newSource("assets/sounds/Victory Sound Effect.mp3", "stream")
+death_sfx = love.audio.newSource("assets/sounds/death_sfx.mp3", "static")
 
 function love.load()
   push:setupScreen(virtual_WIDTH, virtual_HEIGHT, WIDTH, HEIGHT, {
@@ -26,7 +29,8 @@ function love.load()
   gStateMachine = StateMachine {
 
     ['title'] = function() return TitleScreenState() end,
-    ['level1'] = function() return Lvl1State() end
+    ['level1'] = function() return Lvl1State() end,
+    ['Endscreen'] = function() return EndScreenState() end
   }
   gStateMachine:change("title")
 end
@@ -49,7 +53,7 @@ function love.draw()
 end
 
 function love.keypressed(key)
-  if key == "q" then
+  if key == "escape" then
     love.event.quit()
   end
   gStateMachine:check_keypressed(key)

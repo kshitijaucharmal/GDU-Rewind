@@ -50,6 +50,7 @@ function beginContact(a, b, coll)
   if a:getUserData() == "Ghost" and b:getUserData() == "Player" then
     -- DIEEEE!!
     player_dead = true
+    death_sfx:play()
   end
   if a:getUserData() == "Finish" and b:getUserData() == "Player" then
     -- Reached Finish Line
@@ -78,7 +79,7 @@ function Lvl1State:reset_game()
   self.ghostSpawnCtr = 0.0
   player_dead = false
 
-  for i = #all_ghosts,1, -1 do
+  for i = #all_ghosts, 1, -1 do
     local g = all_ghosts[i]
     g:destroy()
     table.remove(all_ghosts, i)
@@ -89,12 +90,14 @@ function Lvl1State:reset_game()
 end
 
 function Lvl1State:next_level()
+  self.bg_music:stop()
   for i = #lvlgen.level, 1, -1 do
     lvlgen.level[i]:destroy()
     table.remove(lvlgen.level, i)
   end
   level_number = level_number + 1
   if level_number > #assets.levels then
+    gStateMachine:change("Endscreen")
     print("Game End")
   end
   --self.world:destroy()
@@ -107,6 +110,7 @@ function Lvl1State:next_level()
   player_start_pos = { self.player.body:getX(), self.player.body:getY() }
   load_next_level = false
   self:reset_game()
+  self.bg_music:play()
 end
 
 function Lvl1State:update(dt)
@@ -132,13 +136,10 @@ function Lvl1State:update(dt)
     ghostModeShader:send("u_softness", 0.45)
     ghostModeShader:send("u_sepia_opacity", 0.5)
 
-    -- --play rewind sfx
-    rewind:play()
-    rewind:stop()
-
     if not player_at_start then
       self.player:reset_pos()
       player_at_start = true
+      rewind:play()
     end
     --update ghost spawn time
     self.ghostSpawnCtr = self.ghostSpawnCtr + dt
@@ -154,7 +155,6 @@ function Lvl1State:update(dt)
       newGhost.posCounter = #player_positions
       table.insert(all_ghosts, newGhost)
     end
-
   else
     --will store pos of player
     local playerPos = { self.player.body:getX(), self.player.body:getY() }

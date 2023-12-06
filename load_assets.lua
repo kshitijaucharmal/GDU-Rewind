@@ -10,11 +10,11 @@ function Assets()
   --Different levels diff images
 
   assets.level_datas = {
-    --1) Level 1
+    --1) Add levels here
     love.image.newImageData("assets/levels/map1.png"),
     love.image.newImageData("assets/levels/map2.png"),
     love.image.newImageData("assets/levels/map3.png"),
-    love.image.newImageData("assets/levels/map4.png"),
+    love.image.newImageData("assets/levels/map4.png")
   }
 
   assets.levels = {}
