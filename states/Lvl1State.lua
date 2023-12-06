@@ -108,6 +108,13 @@ function Lvl1State:update(dt)
   end
 
   if game_ghost_Mode then
+    -- Shader Stuff
+    ghostModeShader:send("u_vignette_opacity", 0.8)
+    ghostModeShader:send("u_correct_ratio", false)
+    ghostModeShader:send("u_radius", 0.75)
+    ghostModeShader:send("u_softness", 0.45)
+    ghostModeShader:send("u_sepia_opacity", 0.75)
+
     -- --play rewind sfx
     rewind:play()
     rewind:stop()

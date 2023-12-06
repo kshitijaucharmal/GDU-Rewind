@@ -17,6 +17,8 @@ function love.load()
   love.window.setMode(WIDTH, HEIGHT)
   love.window.setTitle("REWIND")
 
+  ghostModeShader = love.graphics.newShader("shaders/ghost_mode.glsl")
+
   gStateMachine = StateMachine {
 
     ['title'] = function() return TitleScreenState() end,
@@ -26,6 +28,12 @@ function love.load()
 end
 
 function love.update(dt)
+  ghostModeShader:send("u_sepia_opacity", 0.0)
+  ghostModeShader:send("u_correct_ratio", false)
+  ghostModeShader:send("u_radius", 0.75)
+  ghostModeShader:send("u_softness", 0.45)
+  ghostModeShader:send("u_vignette_opacity", 0.0)
+
   gStateMachine:update(dt)
 end
 
@@ -33,6 +41,7 @@ function love.draw()
   push:start()
   gStateMachine:draw()
   push:finish()
+  love.graphics.setShader(ghostModeShader)
 end
 
 function love.keypressed(key)
