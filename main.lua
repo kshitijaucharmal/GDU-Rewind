@@ -8,6 +8,10 @@ push = require "libraries/push"
 WIDTH = 1250
 HEIGHT = 1000
 
+--sound effects
+rewind = love.audio.newSource("assets/sounds/Rewind - Sound Effect.mp3", "static")
+jump_sfx = love.audio.newSource("assets/sounds/Jump effect.mp3", "static")
+
 function love.load()
   push:setupScreen(virtual_WIDTH, virtual_HEIGHT, WIDTH, HEIGHT, {
     vsync = true,

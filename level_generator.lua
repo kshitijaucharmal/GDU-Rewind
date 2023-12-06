@@ -4,7 +4,7 @@ function LevelLoader()
   local lvlgen = {}
   lvlgen.level = {}
 
-  function lvlgen.LoadLevel(self, currentLevel, currentLevelImgData)
+  function lvlgen.LoadLevel(self, currentLevel, currentLevelImgData, world)
     for i = 1, currentLevel:getWidth() do
       for j = 1, currentLevel:getHeight() do
         local r, g, b, a = currentLevelImgData:getPixel(i - 1, j - 1)
@@ -14,14 +14,16 @@ function LevelLoader()
 
         local x = (i - 1) * cellSize
         local y = (j - 1) * cellSize
-        mapper.mapColorToTile({ r, g, b }, x, y, self.level)
+        mapper.mapColorToTile({ r, g, b }, x, y, self.level, world)
 
         ::continue::
       end
     end
+
+    self.setup_walls(world)
   end
 
-  function lvlgen.setup_walls()
+  function lvlgen.setup_walls(world)
     -- Create walls as static bodies
     local leftWall = love.physics.newBody(world, 0, love.graphics.getHeight() / 2)
     local rightWall = love.physics.newBody(world, virtual_WIDTH, love.graphics.getHeight() / 2)

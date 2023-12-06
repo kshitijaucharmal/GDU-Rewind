@@ -10,7 +10,7 @@ function Mapper()
   local playerClass = require('player')
   local mapper = {}
 
-  function mapper.mapColorToTile(color, x, y, level)
+  function mapper.mapColorToTile(color, x, y, level, world)
     local tile = nil
     if compareColors(color, colors.white) then
       tile = tileClass(assets.blank, x, y, world, "static")
@@ -21,8 +21,8 @@ function Mapper()
       tile.fixture:setUserData("Ground")
       tile.fixture:setCategory(3)
     elseif compareColors(color, colors.red) then
-      player = playerClass(x, y, world)
-      tile = player
+      level.player = playerClass(x, y, world)
+      tile = level.player
     elseif compareColors(color, colors.green) then
       tile = tileClass(assets.tree, x, y, world, "static")
       tile.fixture:setCategory(5)

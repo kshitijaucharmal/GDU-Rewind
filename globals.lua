@@ -9,6 +9,5 @@ HEIGHT = 1000
 virtual_WIDTH = 800
 virtual_HEIGHT = 640
 
-cellSize = virtual_WIDTH / assets.level1ImgData:getWidth()
-player_positions = {}
+cellSize = virtual_WIDTH / assets.level_datas[1]:getWidth()
 player_start_pos = {}

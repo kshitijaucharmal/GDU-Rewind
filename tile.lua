@@ -22,6 +22,21 @@ function Tile(tileImg, x, y, world, movement)
     end
   end
 
+  function tile.destroy(self)
+    local fixture = self.fixture
+    local body = fixture:getBody()
+
+    -- Remove the fixture
+    fixture:destroy()
+
+    -- Remove the body
+    body:destroy()
+
+    -- Remove references
+    self.fixture = nil
+    self = nil
+  end
+
   return tile
 end
 

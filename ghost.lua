@@ -15,9 +15,9 @@ function Ghost(x, y, world)
     ghost.debug = false
 
     -- Properties
-    ghost.width = player.width
-    ghost.height = player.height
-    ghost.scaleX = (player.width / assets.tileSize) * 2 -- Mirrored horizontally
+    ghost.width = 16
+    ghost.height = 28
+    ghost.scaleX = (ghost.width / assets.tileSize) * 2 -- Mirrored horizontally
     ghost.scaleY = 32 / assets.tileSize
 
     -- flipped

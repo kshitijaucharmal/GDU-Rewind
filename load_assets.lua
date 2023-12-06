@@ -9,21 +9,18 @@ function Assets()
 
   --Different levels diff images
 
-  --1) Level 1
-  assets.level1ImgData = love.image.newImageData("assets/levels/map1.png")
-  assets.level1 = love.graphics.newImage(assets.level1ImgData)
+  assets.level_datas = {
+    --1) Level 1
+    love.image.newImageData("assets/levels/map1.png"),
+    love.image.newImageData("assets/levels/map2.png"),
+    --love.image.newImageData("assets/levels/map3.png"),
+    --love.image.newImageData("assets/levels/map4.png"),
+  }
 
-  --2) Level 2
-  assets.level2ImgData = love.image.newImageData("assets/levels/map2.png")
-  assets.level2 = love.graphics.newImage(assets.level2ImgData)
-
-  --3) Level 3
-  assets.level3ImgData = love.image.newImageData("assets/levels/map3.png")
-  assets.level3 = love.graphics.newImage(assets.level3ImgData)
-
-  --4) Level 4
-  assets.level4ImgData = love.image.newImageData("assets/levels/map4.png")
-  assets.level4 = love.graphics.newImage(assets.level4ImgData)
+  assets.levels = {}
+  for i = 1, #assets.level_datas, 1 do
+    table.insert(assets.levels, love.graphics.newImage(assets.level_datas[i]))
+  end
 
   assets.bg = love.graphics.newImage("assets/Backgrounds/space_bg.png")
 
