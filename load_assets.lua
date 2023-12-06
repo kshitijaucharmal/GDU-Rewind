@@ -13,6 +13,18 @@ function Assets()
   assets.level1ImgData = love.image.newImageData("assets/levels/map1.png")
   assets.level1 = love.graphics.newImage(assets.level1ImgData)
 
+  --2) Level 2
+  assets.level2ImgData = love.image.newImageData("assets/levels/map2.png")
+  assets.level2 = love.graphics.newImage(assets.level2ImgData)
+
+  --3) Level 3
+  assets.level3ImgData = love.image.newImageData("assets/levels/map3.png")
+  assets.level3 = love.graphics.newImage(assets.level3ImgData)
+
+  --4) Level 4
+  assets.level4ImgData = love.image.newImageData("assets/levels/map4.png")
+  assets.level4 = love.graphics.newImage(assets.level4ImgData)
+
   assets.bg = love.graphics.newImage("assets/Backgrounds/space_bg.png")
 
   assets.player = love.graphics.newQuad(assets.tileSize * 9, assets.tileSize * 5, assets.tileSize, assets.tileSize,

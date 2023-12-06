@@ -15,6 +15,7 @@ local game_ghost_Mode = false
 local all_ghosts = {}
 local player_at_start = true
 local player_dead = false
+local load_next_level = false
 
 Lvl1State = Class { __includes = BaseState }
 
@@ -57,7 +58,7 @@ function beginContact(a, b, coll)
   if a:getUserData() == "Finish" and b:getUserData() == "Player" then
     -- Reached Finish Line
     if game_ghost_Mode then
-      next_level()
+      load_next_level = true
     else
       all_ghosts[1].posCounter = #player_positions
       game_ghost_Mode = true
@@ -95,7 +96,9 @@ function reset_game()
 end
 
 function next_level()
-  print('Next Level')
+  level = {}
+  lvlgen:LoadLevel(assets.level2, assets.level2ImgData)
+  load_next_level = false
 end
 
 function Lvl1State:update(dt)
@@ -106,6 +109,10 @@ function Lvl1State:update(dt)
 
   if player_dead then
     reset_game()
+  end
+
+  if load_next_level then
+    next_level()
   end
 
   if game_ghost_Mode then
