@@ -55,7 +55,7 @@ function love.draw()
 end
 
 function love.keypressed(key)
-  if key == "q" then
+  if key == "escape" then
     love.event.quit()
   end
   gStateMachine:check_keypressed(key)
@@ -70,3 +70,7 @@ function beginContact(a, b, coll)
 end
 
 --Press Q to Quit
+--To resize the screen
+function love.resize(w, h)
+  push:resize(w, h)
+end

@@ -10,6 +10,7 @@ function Mapper()
   local playerClass = require('player')
   local mapper = {}
 
+
   function mapper.mapColorToTile(color, x, y, level)
     local tile = nil
     if compareColors(color, colors.white) then

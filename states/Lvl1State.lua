@@ -19,23 +19,7 @@ Lvl1State = Class { __includes = BaseState }
 
 local isGrounded = true
 function Lvl1State:init()
-  --love.graphics.setBackgroundColor(150/255, 200/255, 255/255)
-  love.physics.setMeter(128)
-  world = love.physics.newWorld(0, 2 * 9.81 * 128, true)
-  -- Get Info about collisions
-  world:setCallbacks(beginContact, endContact)
 
-  -- Spawn Level
-  lvlgen:LoadLevel(assets.level1, assets.level1ImgData)
-  lvlgen.setup_walls()
-
-  local ghost = ghostClass(-100, -100, world)
-  table.insert(all_ghosts, ghost)
-
-  ghostSpawnTimer = 0.0
-  player_start_pos = { player.body:getX(), player.body:getY() }
-
-  --loading music
 end
 
 -- When two bodies start colliding
@@ -60,11 +44,6 @@ function Lvl1State:check_beginContact(a, b, coll)
       player_at_start = false
     end
   end
-end
-
---To resize the screen
-function love.resize(w, h)
-  push:resize(w, h)
 end
 
 function Lvl1State:reset_game()
@@ -155,4 +134,34 @@ function Lvl1State:draw()
       all_ghosts[i]:draw()
     end
   end
+end
+
+function Lvl1State:exit()
+  -- Destroy all components and resources when exiting the state
+  for i = #all_ghosts, 1, -1 do
+    local g = all_ghosts[i]
+    table.remove(all_ghosts, i)
+    g:destroy()
+  end
+
+  world:destroy()
+end
+
+function Lvl1State:enter()
+  --love.graphics.setBackgroundColor(150/255, 200/255, 255/255)
+  love.physics.setMeter(128)
+  world = love.physics.newWorld(0, 2 * 9.81 * 128, true)
+  -- Get Info about collisions
+  world:setCallbacks(beginContact, endContact)
+
+
+  -- Spawn Level
+  lvlgen:LoadLevel(assets.level1, assets.level1ImgData)
+  lvlgen.setup_walls()
+
+  local ghost = ghostClass(-100, -100, world)
+  table.insert(all_ghosts, ghost)
+
+  ghostSpawnTimer = 0.0
+  player_start_pos = { player.body:getX(), player.body:getY() }
 end

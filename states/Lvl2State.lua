@@ -19,24 +19,7 @@ Lvl2State = Class { __includes = BaseState }
 
 local isGrounded = true
 function Lvl2State:init()
-    --sound effects
 
-
-    --love.graphics.setBackgroundColor(150/255, 200/255, 255/255)
-    love.physics.setMeter(128)
-    world = love.physics.newWorld(0, 2 * 9.81 * 128, true)
-    -- Get Info about collisions
-    world:setCallbacks(beginContact, endContact)
-
-    -- Spawn Level
-    lvlgen:LoadLevel(assets.level2, assets.level2ImgData)
-    lvlgen.setup_walls()
-
-    local ghost = ghostClass(-100, -100, world)
-    table.insert(all_ghosts, ghost)
-
-    ghostSpawnTimer = 0.0
-    player_start_pos = { player.body:getX(), player.body:getY() }
 end
 
 -- When two bodies start colliding
@@ -53,7 +36,7 @@ function Lvl2State:check_beginContact(a, b, coll)
     if a:getUserData() == "Finish" and b:getUserData() == "Player" then
         -- Reached Finish Line
         if game_ghost_Mode then
-            -- gStateMachine:change("level3", bg_music:stop())
+            gStateMachine:change("level2", bg_music:stop())
         else
             all_ghosts[1].posCounter = #player_positions
             game_ghost_Mode = true
@@ -61,11 +44,6 @@ function Lvl2State:check_beginContact(a, b, coll)
             player_at_start = false
         end
     end
-end
-
---To resize the screen
-function love.resize(w, h)
-    push:resize(w, h)
 end
 
 function Lvl2State:reset_game()
@@ -92,7 +70,7 @@ function Lvl2State:update(dt)
     player:move()
 
     if player_dead then
-        Lvl1State:reset_game()
+        Lvl2State:reset_game()
     end
 
     if game_ghost_Mode then
@@ -105,9 +83,11 @@ function Lvl2State:update(dt)
 
 
 
+
         if not player_at_start then
             player:reset_pos()
             player_at_start = true
+            --play rewind sfx
             rewind:play()
         end
         --update ghost spawn time
@@ -154,4 +134,34 @@ function Lvl2State:draw()
             all_ghosts[i]:draw()
         end
     end
+end
+
+function Lvl2State:exit()
+    -- Destroy all components and resources when exiting the state
+    for i = #all_ghosts, 1, -1 do
+        local g = all_ghosts[i]
+        table.remove(all_ghosts, i)
+        g:destroy()
+    end
+
+    world:destroy()
+end
+
+function Lvl2State:enter()
+    --love.graphics.setBackgroundColor(150/255, 200/255, 255/255)
+    love.physics.setMeter(128)
+    world = love.physics.newWorld(0, 2 * 9.81 * 128, true)
+    -- Get Info about collisions
+    world:setCallbacks(beginContact, endContact)
+
+
+    -- Spawn Level
+    lvlgen:LoadLevel(assets.level2, assets.level2ImgData)
+    lvlgen.setup_walls()
+
+    local ghost = ghostClass(-100, -100, world)
+    table.insert(all_ghosts, ghost)
+
+    ghostSpawnTimer = 0.0
+    player_start_pos = { player.body:getX(), player.body:getY() }
 end

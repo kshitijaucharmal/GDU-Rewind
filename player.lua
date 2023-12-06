@@ -1,3 +1,5 @@
+-- player.lua
+
 require('globals')
 
 function Player(x, y, world)
@@ -31,7 +33,7 @@ function Player(x, y, world)
 
   -- move with keyboard
   function player.move(self)
-    x, y = self.body:getLinearVelocity()
+    local x, y = self.body:getLinearVelocity()
 
     -- Only move if keypressed
     if love.keyboard.isDown('left', 'a') then
@@ -49,40 +51,45 @@ function Player(x, y, world)
   end
 
   function player.jump(self)
-    x, y = self.body:getLinearVelocity()
+    local x, y = self.body:getLinearVelocity()
     -- Set y velocity to jumpForce
     self.body:setLinearVelocity(x, -self.jumpForce)
   end
 
   function player.reset_pos(self)
-    player.body:setPosition(player_start_pos[1], player_start_pos[2])
+    if not self.body:isDestroyed() then
+      player.body:setPosition(player.start_pos[1], player.start_pos[2])
+    end
   end
 
   function player.draw(self)
-    -- position
-    x = self.body:getX() - player.width
-    y = self.body:getY() - 32 * 0.5
+    -- Check if the body is not destroyed before trying to draw
+    if not self.body:isDestroyed() then
+      -- position
+      local x = self.body:getX() - player.width
+      local y = self.body:getY() - 32 * 0.5
 
-    local scaleX = player.scaleX
-    -- Decide orientation
-    if player.flipped then
-      x = self.body:getX() + player.width
-      scaleX = -player.scaleX
-    end
+      local scaleX = player.scaleX
+      -- Decide orientation
+      if player.flipped then
+        x = self.body:getX() + player.width
+        scaleX = -player.scaleX
+      end
 
-    -- Draw Player Sprite
-    love.graphics.draw(assets.tileset, assets.player, x, y, 0, scaleX, player.scaleY)
+      -- Draw Player Sprite
+      love.graphics.draw(assets.tileset, assets.player, x, y, 0, scaleX, player.scaleY)
 
-    -- Draw hitbox
-    if player.debug then
-      love.graphics.setColor(0, 0, 1)
-      love.graphics.circle("line", player.body:getX(), player.body:getY(), player.shape:getRadius())
-      love.graphics.setColor(1, 1, 1)
+      -- Draw hitbox
+      if player.debug then
+        love.graphics.setColor(0, 0, 1)
+        love.graphics.circle("line", self.body:getX(), self.body:getY(), self.shape:getRadius())
+        love.graphics.setColor(1, 1, 1)
+      end
     end
   end
 
   function player.limitJump(self)
-    x, y = self.body:getLinearVelocity()
+    local x, y = self.body:getLinearVelocity()
     y = y * self.stop_factor
     self.body:setLinearVelocity(x, y)
   end
