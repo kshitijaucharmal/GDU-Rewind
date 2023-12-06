@@ -10,8 +10,11 @@ Class = require "libraries/class"
 WIDTH = 1250
 HEIGHT = 1000
 
---Setting physics for Level States :
-
+--sound effects
+rewind = love.audio.newSource("assets/sounds/rewind_sfx.mp3", "static")
+jump_sfx = love.audio.newSource("assets/sounds/Jump effect.mp3", "static")
+bg_music = love.audio.newSource("assets/sounds/Space theme bg.mp3", "stream")
+death_sfx = love.audio.newSource("assets/sounds/death_sfx.mp3", "static")
 
 
 function love.load()
