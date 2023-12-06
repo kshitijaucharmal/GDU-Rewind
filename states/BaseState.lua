@@ -14,3 +14,7 @@ function BaseState:draw() end
 function BaseState:check_keypressed(key) end
 
 function BaseState:check_keyreleased(key) end
+
+function BaseState:check_beginContact(a, b, coll) end
+
+function BaseState:reset_game() end

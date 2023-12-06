@@ -1,4 +1,3 @@
-Class = require 'libraries/class'
 -- Colors
 require('colors')
 
@@ -23,6 +22,8 @@ function Lvl1State:init()
   --sound effects
   rewind = love.audio.newSource("assets/sounds/Rewind - Sound Effect.mp3", "static")
   jump_sfx = love.audio.newSource("assets/sounds/Jump effect.mp3", "static")
+  bg_music = love.audio.newSource("assets/sounds/Space theme bg.mp3", "stream")
+
 
   --love.graphics.setBackgroundColor(150/255, 200/255, 255/255)
   love.physics.setMeter(128)
@@ -41,11 +42,10 @@ function Lvl1State:init()
   player_start_pos = { player.body:getX(), player.body:getY() }
 
   --loading music
-  bg_music = love.audio.newSource("assets/sounds/Space theme bg.mp3", "stream")
 end
 
 -- When two bodies start colliding
-function beginContact(a, b, coll)
+function Lvl1State:check_beginContact(a, b, coll)
   if a:getUserData() == "Ground" and b:getUserData() == "Player" then
     -- Just landed on ground
     isGrounded = true
@@ -57,7 +57,7 @@ function beginContact(a, b, coll)
   if a:getUserData() == "Finish" and b:getUserData() == "Player" then
     -- Reached Finish Line
     if game_ghost_Mode then
-      next_level()
+      gStateMachine:change("level2", bg_music:stop())
     else
       all_ghosts[1].posCounter = #player_positions
       game_ghost_Mode = true
@@ -67,17 +67,12 @@ function beginContact(a, b, coll)
   end
 end
 
--- When two bodies end colliding
-function endContact(a, b, coll)
-  -- Nothing here yet
-end
-
 --To resize the screen
 function love.resize(w, h)
   push:resize(w, h)
 end
 
-function reset_game()
+function Lvl1State:reset_game()
   -- Spawn Level
   player_positions = {}
   player.body:setPosition(player_start_pos[1], player_start_pos[2])
@@ -85,17 +80,13 @@ function reset_game()
   player_at_start = true
   ghostSpawnTimer = 0.0
   player_dead = false
-  for i = #all_ghosts,1, -1 do
+  for i = #all_ghosts, 1, -1 do
     local g = all_ghosts[i]
     table.remove(all_ghosts, i)
     g:destroy()
   end
   local ghost = ghostClass(-100, -100, world)
   table.insert(all_ghosts, ghost)
-end
-
-function next_level()
-  print('Next Level')
 end
 
 function Lvl1State:update(dt)
@@ -105,7 +96,7 @@ function Lvl1State:update(dt)
   player:move()
 
   if player_dead then
-    reset_game()
+    Lvl1State:reset_game()
   end
 
   if game_ghost_Mode then
@@ -138,7 +129,6 @@ function Lvl1State:update(dt)
       newGhost.posCounter = #player_positions
       table.insert(all_ghosts, newGhost)
     end
-
   else
     --will store pos of player
     local playerPos = { player.body:getX(), player.body:getY() }

@@ -1,12 +1,18 @@
 require "states/BaseState"
 require "states/Lvl1State"
+require "states/Lvl2State"
 require "states/TitleScreenState"
 require "StateMachine"
 push = require "libraries/push"
+Class = require "libraries/class"
 
 -- Globals 5:4 ratio
 WIDTH = 1250
 HEIGHT = 1000
+
+--Setting physics for Level States :
+
+
 
 function love.load()
   push:setupScreen(virtual_WIDTH, virtual_HEIGHT, WIDTH, HEIGHT, {
@@ -22,7 +28,8 @@ function love.load()
   gStateMachine = StateMachine {
 
     ['title'] = function() return TitleScreenState() end,
-    ['level1'] = function() return Lvl1State() end
+    ['level1'] = function() return Lvl1State() end,
+    ['level2'] = function() return Lvl2State() end
   }
   gStateMachine:change("title")
 end
@@ -53,6 +60,10 @@ end
 
 function love.keyreleased(key)
   gStateMachine:check_keyreleased(key)
+end
+
+function beginContact(a, b, coll)
+  gStateMachine:check_beginContact(a, b, coll)
 end
 
 --Press Q to Quit

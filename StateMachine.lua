@@ -8,7 +8,9 @@ function StateMachine:init(states)
         enter = function() end,
         exit = function() end,
         check_keypressed = function(key) end,
-        check_keyreleased = function(key) end
+        check_keyreleased = function(key) end,
+        check_beginContact = function(a, b, coll) end,
+        reset_game = function() end
     }
     self.states = states or {}
     self.current = self.empty
@@ -35,4 +37,12 @@ end
 
 function StateMachine:check_keyreleased(key)
     self.current:check_keyreleased(key)
+end
+
+function StateMachine:check_beginContact(a, b, coll)
+    self.current:check_beginContact(a, b, coll)
+end
+
+function StateMachine:reset_game()
+    self.current:reset_game()
 end
