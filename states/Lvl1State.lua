@@ -10,7 +10,7 @@ Lvl1State = Class { __includes = BaseState }
 -- Globals 5:4 ratio
 WIDTH = 1250
 HEIGHT = 1000
-ghost_spawn_timer = 2
+ghost_spawn_timer = 1
 
 virtual_WIDTH = 800
 virtual_HEIGHT = 640
@@ -50,7 +50,7 @@ function Lvl1State:init()
   local ghost = ghostClass(-100, -100, world)
   table.insert(all_ghosts, ghost)
 
-  self.ghostSpawnTimer = 0
+  ghostSpawnTimer = 0.0
   player_start_pos = { player.body:getX(), player.body:getY() }
 
   --loading music
@@ -71,6 +71,7 @@ function beginContact(a, b, coll)
     -- Reached Finish Line
     all_ghosts[1].posCounter = #player_positions
     game_ghost_Mode = true
+    ghostSpawnTimer = 0.0
     player_at_start = false
   end
 end
@@ -88,14 +89,17 @@ end
 function reset_game()
   -- Spawn Level
   print('Game Reset')
+  player_positions = {}
   player.body:setPosition(player_start_pos[1], player_start_pos[2])
   game_ghost_Mode = false
   player_at_start = true
+  ghostSpawnTimer = 0.0
   player_dead = false
-  for i = 1, #all_ghosts, 1 do
-    all_ghosts[i].fixture:destroy()
+  for i = #all_ghosts,1, -1 do
+    local g = all_ghosts[i]
+    table.remove(all_ghosts, i)
+    g:destroy()
   end
-  all_ghosts = {}
   local ghost = ghostClass(-100, -100, world)
   table.insert(all_ghosts, ghost)
 end
@@ -120,24 +124,25 @@ function Lvl1State:update(dt)
       player_at_start = true
     end
     --update ghost spawn time
-    self.ghostSpawnTimer = self.ghostSpawnTimer + dt
+    ghostSpawnTimer = ghostSpawnTimer + dt
     for i = 1, #all_ghosts, 1 do
       if not all_ghosts[i].dead then
         all_ghosts[i]:setPos()
       end
     end
-    for i = #all_ghosts, 1, -1 do
-      if all_ghosts[i].dead then
-        all_ghosts[i].fixture:destroy()
-        table.remove(all_ghosts, i)
-      end
-    end
-    if self.ghostSpawnTimer > ghost_spawn_timer then
+    if ghostSpawnTimer > ghost_spawn_timer then
+      ghostSpawnTimer = 0.0
       local newGhost = all_ghosts[1]:clone()
+      newGhost.dead = false
       newGhost.posCounter = #player_positions
       table.insert(all_ghosts, newGhost)
-      self.ghostSpawnTimer = 0
     end
+    --for i = #all_ghosts, 1, -1 do
+      --if all_ghosts[i].dead then
+        --all_ghosts[i]:destroy()
+        --table.remove(all_ghosts, i)
+      --end
+    --end
 
   else
     --will store pos of player
@@ -165,6 +170,8 @@ function Lvl1State:draw()
   lvlgen:draw()
 
   for i = 1, #all_ghosts, 1 do
-    all_ghosts[i]:draw()
+    if not all_ghosts[i].dead then
+      all_ghosts[i]:draw()
+    end
   end
 end

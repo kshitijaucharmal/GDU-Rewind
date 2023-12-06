@@ -36,21 +36,39 @@ function Ghost(x, y, world)
       return clone
     end
 
+    function ghost.destroy(self)
+      self.dead = true
+      local fixture = self.fixture
+      local body = fixture:getBody()
+
+      -- Remove the fixture
+      fixture:destroy()
+
+      -- Remove the body
+      body:destroy()
+
+      -- Remove references
+      self.fixture = nil
+      self = nil
+    end
+
     --to set pos of player every frame
     function ghost.setPos(self)
-        if self.posCounter <= 0 then
-          ghost.dead = true
-          return
-        end
+      if self.dead then return end
+      if self.posCounter <= 0 then
+        ghost.dead = true
+        return
+      end
 
-        --as here first index is x then y
-        ghost.body:setPosition(player_positions[self.posCounter][1], player_positions[self.posCounter][2])
+      --as here first index is x then y
+      ghost.body:setPosition(player_positions[self.posCounter][1], player_positions[self.posCounter][2])
 
-        --posCounter will dec as we retrive the positions
-        self.posCounter = self.posCounter - 1
+      --posCounter will dec as we retrive the positions
+      self.posCounter = self.posCounter - 1
     end
 
     function ghost.draw(self)
+        if self.dead then return end
         -- position
         x = self.body:getX() - self.width
         y = self.body:getY() - 32 * 0.5
