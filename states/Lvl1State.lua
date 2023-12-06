@@ -19,12 +19,6 @@ Lvl1State = Class { __includes = BaseState }
 
 local isGrounded = true
 function Lvl1State:init()
-  --sound effects
-  rewind = love.audio.newSource("assets/sounds/Rewind - Sound Effect.mp3", "static")
-  jump_sfx = love.audio.newSource("assets/sounds/Jump effect.mp3", "static")
-  bg_music = love.audio.newSource("assets/sounds/Space theme bg.mp3", "stream")
-  death_sfx = love.audio.newSource("assets/sounds/death_sfx.mp3", "static")
-
   --love.graphics.setBackgroundColor(150/255, 200/255, 255/255)
   love.physics.setMeter(128)
   world = love.physics.newWorld(0, 2 * 9.81 * 128, true)
