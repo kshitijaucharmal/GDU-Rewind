@@ -7,7 +7,7 @@ require('globals')
 -- Load LevelLoader
 local lvlgen = require('level_generator')
 local ghostClass = require('ghost')
-local ghost_spawn_timer = 5
+local ghost_spawn_timer = 2
 
 --Track ghost state
 local game_ghost_Mode = false
