@@ -1,38 +1,24 @@
 Class = require 'libraries/class'
 -- Colors
 require('colors')
--- Assets
-assets = require('load_assets')
-push = require "libraries/push"
+
+require('globals')
+
+-- Load LevelLoader
+local lvlgen = require('level_generator')
+local ghostClass = require('ghost')
+local ghost_spawn_timer = 5
+
+--Track ghost state
+local game_ghost_Mode = false
+
+local all_ghosts = {}
+local player_at_start = true
+local player_dead = false
 
 Lvl1State = Class { __includes = BaseState }
 
--- Globals 5:4 ratio
-WIDTH = 1250
-HEIGHT = 1000
-ghost_spawn_timer = 1
-
-virtual_WIDTH = 800
-virtual_HEIGHT = 640
-
-cellSize = virtual_WIDTH / assets.level1ImgData:getWidth()
-
--- Load LevelLoader
-lvlgen = require('level_generator')
-ghostClass = require('ghost')
-playerClass = require('player')
-
 local isGrounded = true
-
---Track ghost state
-game_ghost_Mode = false
-player_positions = {}
-
-all_ghosts = {}
-player_at_start = true
-player_start_pos = {}
-player_dead = false
-
 function Lvl1State:init()
   --sound effects
   rewind = love.audio.newSource("assets/sounds/Rewind - Sound Effect.mp3", "static")
@@ -69,10 +55,14 @@ function beginContact(a, b, coll)
   end
   if a:getUserData() == "Finish" and b:getUserData() == "Player" then
     -- Reached Finish Line
-    all_ghosts[1].posCounter = #player_positions
-    game_ghost_Mode = true
-    ghostSpawnTimer = 0.0
-    player_at_start = false
+    if game_ghost_Mode then
+      next_level()
+    else
+      all_ghosts[1].posCounter = #player_positions
+      game_ghost_Mode = true
+      ghostSpawnTimer = 0.0
+      player_at_start = false
+    end
   end
 end
 
@@ -88,7 +78,6 @@ end
 
 function reset_game()
   -- Spawn Level
-  print('Game Reset')
   player_positions = {}
   player.body:setPosition(player_start_pos[1], player_start_pos[2])
   game_ghost_Mode = false
@@ -102,6 +91,10 @@ function reset_game()
   end
   local ghost = ghostClass(-100, -100, world)
   table.insert(all_ghosts, ghost)
+end
+
+function next_level()
+  print('Next Level')
 end
 
 function Lvl1State:update(dt)
@@ -137,12 +130,6 @@ function Lvl1State:update(dt)
       newGhost.posCounter = #player_positions
       table.insert(all_ghosts, newGhost)
     end
-    --for i = #all_ghosts, 1, -1 do
-      --if all_ghosts[i].dead then
-        --all_ghosts[i]:destroy()
-        --table.remove(all_ghosts, i)
-      --end
-    --end
 
   else
     --will store pos of player

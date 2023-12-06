@@ -1,5 +1,6 @@
 -- Import the Player module
 
+require('globals')
 
 function Ghost(x, y, world)
     local ghost = {}

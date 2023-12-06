@@ -1,4 +1,7 @@
 Class = require 'libraries/class'
+
+require('globals')
+
 TitleScreenState = Class { __includes = BaseState }
 
 button_width = virtual_WIDTH / 3

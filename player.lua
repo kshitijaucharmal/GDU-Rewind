@@ -1,3 +1,5 @@
+require('globals')
+
 function Player(x, y, world)
   local player = {}
   player.debug = false
