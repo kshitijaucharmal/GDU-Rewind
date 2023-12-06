@@ -10,4 +10,5 @@ virtual_WIDTH = 800
 virtual_HEIGHT = 640
 
 cellSize = virtual_WIDTH / assets.level_datas[1]:getWidth()
+player_positions = {}
 player_start_pos = {}

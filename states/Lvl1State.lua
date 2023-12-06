@@ -16,25 +16,23 @@ local player_at_start = true
 local player_dead = false
 local load_next_level = false
 local level_number = 1
+local isGrounded = true
+local all_ghosts = {}
 
 Lvl1State = Class { __includes = BaseState }
 
-local isGrounded = true
 function Lvl1State:init()
-  --love.graphics.setBackgroundColor(150/255, 200/255, 255/255)
   love.physics.setMeter(128)
   self.world = love.physics.newWorld(0, 2 * 9.81 * 128, true)
   -- Get Info about collisions
-  self.world:setCallbacks(self.beginContact, self.endContact)
-  self.player_positions = {}
+  self.world:setCallbacks(beginContact, endContact)
 
   -- Spawn Level
   lvlgen:LoadLevel(assets.levels[level_number], assets.level_datas[level_number], self.world)
   self.player = lvlgen.level.player
 
-  self.all_ghosts = {}
   local ghost = ghostClass(-100, -100, self.world)
-  table.insert(self.all_ghosts, ghost)
+  table.insert(all_ghosts, ghost)
 
   self.ghostSpawnCtr = 0.0
   player_start_pos = { self.player.body:getX(), self.player.body:getY() }
@@ -44,63 +42,68 @@ function Lvl1State:init()
 end
 
 -- When two bodies start colliding
-function Lvl1State:beginContact(body1, body2, coll)
-  if body1:getUserData() == "Ground" and body2:getUserData() == "Player" then
+function beginContact(a, b, coll)
+  if a:getUserData() == "Ground" and b:getUserData() == "Player" then
     -- Just landed on ground
     isGrounded = true
   end
-  if body1:getUserData() == "Ghost" and body2:getUserData() == "Player" then
+  if a:getUserData() == "Ghost" and b:getUserData() == "Player" then
     -- DIEEEE!!
     player_dead = true
   end
-  if body1:getUserData() == "Finish" and body2:getUserData() == "Player" then
+  if a:getUserData() == "Finish" and b:getUserData() == "Player" then
     -- Reached Finish Line
     if game_ghost_Mode then
       load_next_level = true
     else
-      self.all_ghosts[1].posCounter = #self.player_positions
+      all_ghosts[1].posCounter = #player_positions
       game_ghost_Mode = true
-      self.ghostSpawnCtr = 0.0
+      --Lvl1State.ghostSpawnCtr = 0.0
       player_at_start = false
     end
   end
 end
 
 -- When two bodies end colliding
-function Lvl1State:endContact(a, b, coll)
+function endContact(a, b, coll)
   -- Nothing here yet
 end
 
 function Lvl1State:reset_game()
   -- Spawn Level
-  self.player_positions = {}
+  player_positions = {}
   self.player.body:setPosition(player_start_pos[1], player_start_pos[2])
   game_ghost_Mode = false
   player_at_start = true
   self.ghostSpawnCtr = 0.0
   player_dead = false
-  for i = #self.all_ghosts,1, -1 do
-    local g = self.all_ghosts[i]
-    table.remove(self.all_ghosts, i)
+
+  for i = #all_ghosts,1, -1 do
+    local g = all_ghosts[i]
     g:destroy()
+    table.remove(all_ghosts, i)
   end
+
   local ghost = ghostClass(-100, -100, self.world)
-  table.insert(self.all_ghosts, ghost)
+  table.insert(all_ghosts, ghost)
 end
 
 function Lvl1State:next_level()
   for i = #lvlgen.level, 1, -1 do
-    if lvlgen.level[i].fixture:getUserData() ~= "Player" then
-      lvlgen.level[i]:destroy()
-      table.remove(lvlgen.level, i)
-    end
+    lvlgen.level[i]:destroy()
+    table.remove(lvlgen.level, i)
   end
   level_number = level_number + 1
   if level_number > #assets.levels then
-    level_number = 1
+    print("Game End")
   end
-  self.player = {}
-  lvlgen:LoadLevel(assets.levels[level_number], assets.level_datas[level_number])
+  --self.world:destroy()
+  self.world = love.physics.newWorld(0, 2 * 9.81 * 128, true)
+  -- Get Info about collisions
+  self.world:setCallbacks(beginContact, endContact)
+  -- Spawn Level
+  lvlgen:LoadLevel(assets.levels[level_number], assets.level_datas[level_number], self.world)
+  self.player = lvlgen.level.player
   player_start_pos = { self.player.body:getX(), self.player.body:getY() }
   load_next_level = false
   self:reset_game()
@@ -139,23 +142,23 @@ function Lvl1State:update(dt)
     end
     --update ghost spawn time
     self.ghostSpawnCtr = self.ghostSpawnCtr + dt
-    for i = 1, #self.all_ghosts, 1 do
-      if not self.all_ghosts[i].dead then
-        self.all_ghosts[i]:setPos()
+    for i = 1, #all_ghosts, 1 do
+      if not all_ghosts[i].dead then
+        all_ghosts[i]:setPos()
       end
     end
     if self.ghostSpawnCtr > ghost_spawn_time then
       self.ghostSpawnCtr = 0.0
-      local newGhost = self.all_ghosts[1]:clone()
+      local newGhost = all_ghosts[1]:clone()
       newGhost.dead = false
-      newGhost.posCounter = #self.player_positions
-      table.insert(self.all_ghosts, newGhost)
+      newGhost.posCounter = #player_positions
+      table.insert(all_ghosts, newGhost)
     end
 
   else
     --will store pos of player
     local playerPos = { self.player.body:getX(), self.player.body:getY() }
-    table.insert(self.player_positions, playerPos)
+    table.insert(player_positions, playerPos)
   end
 end
 
@@ -177,9 +180,9 @@ function Lvl1State:draw()
   love.graphics.draw(assets.bg, 0, 0, 0, 1, 1)
   lvlgen:draw()
 
-  for i = 1, #self.all_ghosts, 1 do
-    if not self.all_ghosts[i].dead then
-      self.all_ghosts[i]:draw()
+  for i = 1, #all_ghosts, 1 do
+    if not all_ghosts[i].dead then
+      all_ghosts[i]:draw()
     end
   end
 end

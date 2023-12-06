@@ -87,6 +87,21 @@ function Player(x, y, world)
     self.body:setLinearVelocity(x, y)
   end
 
+  function player:destroy()
+    local fixture = self.fixture
+    local body = fixture:getBody()
+
+    -- Remove the fixture
+    fixture:destroy()
+
+    -- Remove the body
+    body:destroy()
+
+    -- Remove references
+    self.fixture = nil
+    self = nil
+  end
+
   return player
 end
 
