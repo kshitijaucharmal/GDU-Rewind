@@ -15,6 +15,7 @@ function Assets()
     love.image.newImageData("assets/levels/map2.png"),
     love.image.newImageData("assets/levels/map3.png"),
     love.image.newImageData("assets/levels/map4.png")
+
   }
 
   assets.levels = {}
