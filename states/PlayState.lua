@@ -19,9 +19,12 @@ local level_number = 1
 local isGrounded = true
 local all_ghosts = {}
 
+--Player Health
+player_health = 2
+player_maxhealth = 2
+
+
 PlayState = Class { __includes = BaseState }
-
-
 
 function PlayState:init()
   love.physics.setMeter(128)
@@ -53,6 +56,12 @@ function beginContact(a, b, coll)
     -- DIEEEE!!
     player_dead = true
     death_sfx:play()
+    player_health = math.max(player_health - 1, 0)
+
+    --if player health reaches 0
+    if player_health == 0 then
+      gStateMachine:change("Endscreen")
+    end
   end
   if a:getUserData() == "Finish" and b:getUserData() == "Player" then
     -- Reached Finish Line
@@ -192,4 +201,9 @@ function PlayState:draw()
     end
   end
   push:finish()
+end
+
+function PlayState:enter()
+  --reset player health
+  player_health = 2
 end

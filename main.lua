@@ -17,6 +17,7 @@ rewind = love.audio.newSource("assets/sounds/Rewind_sfx.mp3", "static")
 jump_sfx = love.audio.newSource("assets/sounds/Jump effect.mp3", "static")
 victory = love.audio.newSource("assets/sounds/Victory Sound Effect.mp3", "stream")
 death_sfx = love.audio.newSource("assets/sounds/death_sfx.mp3", "static")
+GameOver_sfx = love.audio.newSource("assets/sounds/Game Over Sound Effect.mp3", "stream")
 
 -- Shaders
 ghostModeShader = love.graphics.newShader("shaders/ghost_mode.glsl")
