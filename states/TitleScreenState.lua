@@ -27,10 +27,15 @@ local function newButton(text, fn, selected)
 end
 
 function TitleScreenState:init()
+    --to show instructions
+    self.showInstructions = false
+
     main_menu = love.graphics.newImage("assets/mainmenubg.png")
+    instructions_bg = love.graphics.newImage("assets/Instructions.png")
     UI_sfx_move = love.audio.newSource("assets/sounds/UI.mp3", "static")
     UI_sfx_selected = love.audio.newSource("assets/sounds/UI_selected.mp3", "static")
     main_menu_bg = love.audio.newSource("assets/sounds/Main menu bg.mp3", "stream")
+
 
     main_menu_bg:play()
     buttons = {}
@@ -44,9 +49,10 @@ function TitleScreenState:init()
     ))
 
     table.insert(buttons, newButton(
-        "Settings",
+        "Instructions",
         function()
             print("Settings")
+            self.showInstructions = true
         end,
         false
     ))
@@ -61,70 +67,80 @@ function TitleScreenState:init()
 end
 
 function TitleScreenState:update(dt)
-
+    if self.showInstructions then
+        main_menu_bg:stop()
+    else
+        main_menu_bg:play()
+    end
 end
 
 function TitleScreenState:draw()
     --bg image
-    love.graphics.draw(main_menu, -25, 0, 0, 0.7, 0.7)
-    -- love.graphics.draw(drawable,x,y,r,sx,sy,ox,oy)
-    local margin = 20
-    local total_height = (button_height + margin) * #buttons
 
-    local cursor_y = 0
+    if self.showInstructions then
+        love.graphics.draw(instructions_bg, -25, 0, 0, 0.7, 0.7)
+    else
+        love.graphics.draw(main_menu, -25, 0, 0, 0.7, 0.7)
 
-    for i, button in ipairs(buttons) do
-        local bx = virtual_WIDTH / 2 - button_width / 2
-        local by = virtual_HEIGHT / 2 - button_height / 2 - total_height / 2 + cursor_y
-        local color = { 0.4, 0.4, 0.5, 1.0 }
+        -- love.graphics.draw(drawable,x,y,r,sx,sy,ox,oy)
+        local margin = 20
+        local total_height = (button_height + margin) * #buttons
 
-        local mx, my = love.mouse.getPosition()
-        local hovered = mx > bx and mx < bx + button_width and
-            my > by and my < by + button_height
+        local cursor_y = 0
 
-        if hovered then
-            color = { 0.8, 0.8, 0.9, 1.0 }
-        end
+        for i, button in ipairs(buttons) do
+            local bx = virtual_WIDTH / 2 - button_width / 2
+            local by = virtual_HEIGHT / 2 - button_height / 2 - total_height / 2 + cursor_y
+            local color = { 0.4, 0.4, 0.5, 1.0 }
 
-        button.now = love.mouse.isDown(1)
-        if button.now and not button.last and hovered then
-            button.fn()
-        end
+            local mx, my = love.mouse.getPosition()
+            local hovered = mx > bx and mx < bx + button_width and
+                my > by and my < by + button_height
 
-        button.last = button.now
-        if button.selected then
-            love.graphics.setColor(1, 0.4, 0.5, 1.0)
+            if hovered then
+                color = { 0.8, 0.8, 0.9, 1.0 }
+            end
+
+            button.now = love.mouse.isDown(1)
+            if button.now and not button.last and hovered then
+                button.fn()
+            end
+
+            button.last = button.now
+            if button.selected then
+                love.graphics.setColor(1, 0.4, 0.5, 1.0)
+                love.graphics.rectangle(
+                    "fill",
+                    bx - 5,
+                    by - 5,
+                    button_width + 10,
+                    button_height + 10
+                )
+            end
+            love.graphics.setColor(unpack(color))
             love.graphics.rectangle(
                 "fill",
-                bx - 5,
-                by - 5,
-                button_width + 10,
-                button_height + 10
+                bx,
+                by,
+                button_width,
+                button_height
+            )
+
+            cursor_y = cursor_y + (button_height + margin)
+
+            local font = love.graphics.newFont(14)
+
+            local textW = font:getWidth(button.text)
+            local textH = font:getHeight(button.text)
+
+            love.graphics.setColor(0, 0, 0, 1)
+            love.graphics.print(
+                button.text,
+                font,
+                virtual_WIDTH / 2 - textW / 2,
+                by + textH / 2
             )
         end
-        love.graphics.setColor(unpack(color))
-        love.graphics.rectangle(
-            "fill",
-            bx,
-            by,
-            button_width,
-            button_height
-        )
-
-        cursor_y = cursor_y + (button_height + margin)
-
-        local font = love.graphics.newFont(14)
-
-        local textW = font:getWidth(button.text)
-        local textH = font:getHeight(button.text)
-
-        love.graphics.setColor(0, 0, 0, 1)
-        love.graphics.print(
-            button.text,
-            font,
-            virtual_WIDTH / 2 - textW / 2,
-            by + textH / 2
-        )
     end
 end
 
@@ -146,9 +162,9 @@ function TitleScreenState:check_keypressed(key)
         main_menu_bg:stop()
     end
 
-    -- if key == "up" then
-    --     selectNo = next()
-    --     print(selectNo)
-    --     buttons[-1*((selectNo) % #buttons-1)].selected = true
-    -- end
+    if self.showInstructions then
+        if key == "space" then
+            self.showInstructions = false
+        end
+    end
 end
