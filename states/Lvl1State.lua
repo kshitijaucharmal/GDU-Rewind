@@ -28,7 +28,7 @@ function Lvl1State:init()
   self.world:setCallbacks(beginContact, endContact)
 
   -- Spawn Level
-  lvlgen:LoadLevel(assets.levels[level_number], assets.level_datas[level_number], self.world)
+  lvlgen:LoadLevel(assets.levels[1], assets.level_datas[1], self.world)
   self.player = lvlgen.level.player
 
   local ghost = ghostClass(-100, -100, self.world)
@@ -97,8 +97,10 @@ function Lvl1State:next_level()
   end
   level_number = level_number + 1
   if level_number > #assets.levels then
+    level_number = 0
     gStateMachine:change("Endscreen")
     print("Game End")
+    return
   end
   --self.world:destroy()
   self.world = love.physics.newWorld(0, 2 * 9.81 * 128, true)
