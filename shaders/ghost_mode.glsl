@@ -12,8 +12,7 @@ uniform float shake_speed = 10.0;
 uniform float shake_block_size = 30.5;
 uniform float shake_color_rate = 0.004;
 
-float random(float seed)
-{
+float random(float seed) {
     return fract(543.2543 * sin(dot(vec2(seed, seed), vec2(3525.46, -54.3415))));
 }
 
@@ -26,7 +25,7 @@ vec4 effect(vec4 color, sampler2D texture, vec2 texCoords, vec2 screenCoords) {
 	vec4 texColor = texture2D(texture, texCoords);
 	vec2 position = (screenCoords.xy / love_ScreenSize.xy) - vec2(0.5);
 
-    // Glitch Effect
+    // Glitch Effect ---------------------------------------------------------------------------
     float enable_shift = float(
         random(floor(time * shake_speed))
         < shake_rate
@@ -49,8 +48,9 @@ vec4 effect(vec4 color, sampler2D texture, vec2 texCoords, vec2 screenCoords) {
         Texel(texture, texCoords + vec2(-shake_color_rate, 0.0)).b,
         enable_shift
     );
-    // Glitch Effect end
+    // ----------------------------------------------------------------------------------------
 
+    // Vignette -------------------------------------------------------------------------------
 	if (u_correct_ratio) {
 		position.x *= love_ScreenSize.x / love_ScreenSize.y;
 	}
@@ -60,8 +60,14 @@ vec4 effect(vec4 color, sampler2D texture, vec2 texCoords, vec2 screenCoords) {
 		u_radius - u_softness,
 		length(position)
 	);
+	texColor.rgb = mix(
+		texColor.rgb,
+		texColor.rgb * vignette,
+		u_vignette_opacity
+	);
+    // ----------------------------------------------------------------------------------------
 
-	// NTSC weights
+    // Sepia ----------------------------------------------------------------------------------
 	float grey = dot(texColor.rgb, vec3(0.299, 0.587, 0.114));
 
 	vec3 sepia = vec3(grey);
@@ -73,16 +79,12 @@ vec4 effect(vec4 color, sampler2D texture, vec2 texCoords, vec2 screenCoords) {
 		sepia,
 		u_sepia_opacity
 	);
+    // ----------------------------------------------------------------------------------------
 
-	texColor.rgb = mix(
-		texColor.rgb,
-		texColor.rgb * vignette,
-		u_vignette_opacity
-	);
-
-    // Apply simple scanline effect
+    // Retro Scanlines -----------------------------------------------------------------------
     float scanline = mod(floor(screenCoords.y / 2.0), 2.0);
     texColor.rgb -= vec3(scanline * 0.05);
+    // ---------------------------------------------------------------------------------------
 
 	return texColor * color;
 }

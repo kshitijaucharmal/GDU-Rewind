@@ -43,8 +43,8 @@ function love.update(dt)
   ghostModeShader:send("u_radius", 0.75)
   ghostModeShader:send("u_softness", 0.45)
   ghostModeShader:send("u_vignette_opacity", 0.0)
-  ghostModeShader:send("time", love.timer.getTime())
 
+  ghostModeShader:send("time", love.timer.getTime())
   glitchShader:send("time", love.timer.getTime())
 
   gStateMachine:update(dt)
