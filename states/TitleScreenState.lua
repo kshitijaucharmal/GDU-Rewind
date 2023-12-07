@@ -8,7 +8,6 @@ button_width = virtual_WIDTH / 3
 button_height = 32
 local buttons = {}
 
-
 local function next()
     for i, button in ipairs(buttons) do
         if (button.selected) then
@@ -34,6 +33,7 @@ function TitleScreenState:init()
     main_menu_bg = love.audio.newSource("assets/sounds/Main menu bg.mp3", "stream")
 
     main_menu_bg:play()
+    buttons = {}
 
     table.insert(buttons, newButton(
         "Start Game",

@@ -21,6 +21,8 @@ local all_ghosts = {}
 
 Lvl1State = Class { __includes = BaseState }
 
+
+
 function Lvl1State:init()
   love.physics.setMeter(128)
   self.world = love.physics.newWorld(0, 2 * 9.81 * 128, true)
@@ -28,7 +30,7 @@ function Lvl1State:init()
   self.world:setCallbacks(beginContact, endContact)
 
   -- Spawn Level
-  lvlgen:LoadLevel(assets.levels[level_number], assets.level_datas[level_number], self.world)
+  lvlgen:LoadLevel(assets.levels[1], assets.level_datas[1], self.world)
   self.player = lvlgen.level.player
 
   local ghost = ghostClass(-100, -100, self.world)
@@ -97,8 +99,10 @@ function Lvl1State:next_level()
   end
   level_number = level_number + 1
   if level_number > #assets.levels then
+    level_number = 0
     gStateMachine:change("Endscreen")
     print("Game End")
+    return
   end
   --self.world:destroy()
   self.world = love.physics.newWorld(0, 2 * 9.81 * 128, true)
@@ -134,7 +138,8 @@ function Lvl1State:update(dt)
     ghostModeShader:send("u_correct_ratio", false)
     ghostModeShader:send("u_radius", 0.8)
     ghostModeShader:send("u_softness", 0.45)
-    ghostModeShader:send("u_sepia_opacity", 0.5)
+    ghostModeShader:send("u_sepia_opacity", 0.75)
+    love.graphics.setShader(ghostModeShader)
 
     if not player_at_start then
       self.player:reset_pos()
@@ -177,6 +182,7 @@ function Lvl1State:check_keyreleased(key)
 end
 
 function Lvl1State:draw()
+  push:start()
   love.graphics.draw(assets.bg, 0, 0, 0, 1, 1)
   lvlgen:draw()
 
@@ -185,4 +191,5 @@ function Lvl1State:draw()
       all_ghosts[i]:draw()
     end
   end
+  push:finish()
 end
