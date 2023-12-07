@@ -1,5 +1,5 @@
 require "states/BaseState"
-require "states/Lvl1State"
+require "states/PlayState"
 require "states/TitleScreenState"
 require "states/EndScreenState"
 require "StateMachine"
@@ -34,7 +34,7 @@ function love.load()
   gStateMachine = StateMachine {
 
     ['title'] = function() return TitleScreenState() end,
-    ['level1'] = function() return Lvl1State() end,
+    ['level1'] = function() return PlayState() end,
     ['Endscreen'] = function() return EndScreenState() end
   }
   gStateMachine:change("title")

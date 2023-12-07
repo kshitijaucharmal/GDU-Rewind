@@ -19,11 +19,11 @@ local level_number = 1
 local isGrounded = true
 local all_ghosts = {}
 
-Lvl1State = Class { __includes = BaseState }
+PlayState = Class { __includes = BaseState }
 
 
 
-function Lvl1State:init()
+function PlayState:init()
   love.physics.setMeter(128)
   self.world = love.physics.newWorld(0, 2 * 9.81 * 128, true)
   -- Get Info about collisions
@@ -61,7 +61,7 @@ function beginContact(a, b, coll)
     else
       all_ghosts[1].posCounter = #player_positions
       game_ghost_Mode = true
-      --Lvl1State.ghostSpawnCtr = 0.0
+      --PlayState.ghostSpawnCtr = 0.0
       player_at_start = false
     end
   end
@@ -72,7 +72,7 @@ function endContact(a, b, coll)
   -- Nothing here yet
 end
 
-function Lvl1State:reset_game()
+function PlayState:reset_game()
   -- Spawn Level
   player_positions = {}
   self.player.body:setPosition(player_start_pos[1], player_start_pos[2])
@@ -91,7 +91,7 @@ function Lvl1State:reset_game()
   table.insert(all_ghosts, ghost)
 end
 
-function Lvl1State:next_level()
+function PlayState:next_level()
   self.bg_music:stop()
   for i = #lvlgen.level, 1, -1 do
     lvlgen.level[i]:destroy()
@@ -117,7 +117,7 @@ function Lvl1State:next_level()
   self.bg_music:play()
 end
 
-function Lvl1State:update(dt)
+function PlayState:update(dt)
   self.world:update(dt)
 
   self.bg_music:play()
@@ -167,7 +167,7 @@ function Lvl1State:update(dt)
   end
 end
 
-function Lvl1State:check_keypressed(key)
+function PlayState:check_keypressed(key)
   if isGrounded and (key == 'up' or key == "w") then
     self.player:jump()
     isGrounded = false
@@ -175,13 +175,13 @@ function Lvl1State:check_keypressed(key)
   end
 end
 
-function Lvl1State:check_keyreleased(key)
+function PlayState:check_keyreleased(key)
   if (key == 'w' or key == 'up') then
     self.player:limitJump()
   end
 end
 
-function Lvl1State:draw()
+function PlayState:draw()
   push:start()
   love.graphics.draw(assets.bg, 0, 0, 0, 1, 1)
   lvlgen:draw()
